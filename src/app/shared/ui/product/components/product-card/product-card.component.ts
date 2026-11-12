@@ -13,6 +13,7 @@ import { Iproduct } from '../../../../../core/models/product/iproduct.interface'
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { isPlatformBrowser } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-card',
@@ -23,6 +24,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class ProductCardComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly platform_id = inject(PLATFORM_ID);
+  private readonly toster = inject(ToastrService);
   product: InputSignal<Iproduct> = input({} as Iproduct);
   isProductInWishList = () => this.userService.wishlistIds().has(this.product()._id);
   adding: WritableSignal<boolean> = signal(false);
@@ -40,26 +42,42 @@ export class ProductCardComponent implements OnInit {
   }
 
   addToWithList(productId: string): void {
-    const exists = this.userService.wishlistIds().has(productId);
-    const action = exists
-      ? this.userService.removefromWithList(productId)
-      : this.userService.addToWithList({ productId });
-    action.subscribe(() => this.userService.setWishlistMembership(productId, !exists));
+    if (isPlatformBrowser(this.platform_id)) {
+      let token = localStorage.getItem('token');
+      if (!token) token = sessionStorage.getItem('token');
+      if (token) {
+        const exists = this.userService.wishlistIds().has(productId);
+        const action = exists
+          ? this.userService.removefromWithList(productId)
+          : this.userService.addToWithList({ productId });
+        action.subscribe(() => this.userService.setWishlistMembership(productId, !exists));
+      } else {
+        this.toster.warning('plz login frist!');
+      }
+    }
   }
 
   addToCart(id: string) {
-    this.adding.set(true);
-    this.done.set(false);
-    const payload = {
-      productId: id,
-    };
-    this.userService.addToCart(payload).subscribe(() => {
-      this.userService.refreshCartCount();
-      this.adding.set(false);
-      this.done.set(true);
-      setTimeout(() => {
+    if (isPlatformBrowser(this.platform_id)) {
+      let token = localStorage.getItem('token');
+      if (!token) token = sessionStorage.getItem('token');
+      if (token) {
+        this.adding.set(true);
         this.done.set(false);
-      }, 1000);
-    });
+        const payload = {
+          productId: id,
+        };
+        this.userService.addToCart(payload).subscribe(() => {
+          this.userService.refreshCartCount();
+          this.adding.set(false);
+          this.done.set(true);
+          setTimeout(() => {
+            this.done.set(false);
+          }, 1000);
+        });
+      } else {
+        this.toster.warning('plz login frist!');
+      }
+    }
   }
 }

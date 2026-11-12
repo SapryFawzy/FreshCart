@@ -58,8 +58,10 @@ export class NavbarComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   categories: WritableSignal<Icatgory[]> = signal([]);
   user: WritableSignal<Iuser | null> = signal(null);
-  wishListCount: Signal<number> = computed(() => this.userService.wishListCount());
-  cartCount: Signal<number> = computed(() => this.userService.cartCount());
+  wishListCount: Signal<number> | WritableSignal<number> = computed(() =>
+    this.userService.wishListCount(),
+  );
+  cartCount: Signal<number> | WritableSignal<number> = computed(() => this.userService.cartCount());
   searchForm = this.fb.group({
     search: ['', Validators.required],
   });
@@ -68,7 +70,16 @@ export class NavbarComponent implements OnInit {
     this.initNav();
     this.translate.onLangChange.subscribe(() => this.initNav());
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      this.getWishlistAndCartCount();
+      if (isPlatformBrowser(this.platform_id)) {
+        let token = localStorage.getItem('token');
+        if (!token) token = sessionStorage.getItem('token');
+        if (token) {
+          this.getWishlistAndCartCount();
+        } else {
+          this.userService.wishListCount.set(0);
+          this.userService.cartCount.set(0);
+        }
+      }
     });
   }
 
@@ -276,6 +287,7 @@ export class NavbarComponent implements OnInit {
     sessionStorage.removeItem('user');
     this.user.set(null);
     this.isLogedInUser.set(false);
+    this.initNav();
     this.router.navigate(['/login']);
   }
 

@@ -11,7 +11,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../../core/services/products.service';
 import { Iproduct, Review, ReviewsStatus } from '../../../core/models/product/iproduct.interface';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -39,6 +39,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   private readonly productsService = inject(ProductsService);
   private readonly userService = inject(UserService);
   private readonly toastr = inject(ToastrService);
+  private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly formBuilder = inject(FormBuilder);
@@ -190,14 +191,16 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     let tokenUserId: string | undefined;
     if (token) {
       try {
-        tokenUserId = jwtDecode<{ id?: string; _id?: string }>(token).id ?? jwtDecode<{ _id?: string }>(token)._id;
+        tokenUserId =
+          jwtDecode<{ id?: string; _id?: string }>(token).id ??
+          jwtDecode<{ _id?: string }>(token)._id;
       } catch {
         tokenUserId = undefined;
       }
     }
     try {
       const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
-      const user = rawUser ? JSON.parse(rawUser) as { id?: string; _id?: string } : {};
+      const user = rawUser ? (JSON.parse(rawUser) as { id?: string; _id?: string }) : {};
       this.currentUserId.set(user.id ?? user._id ?? tokenUserId ?? null);
     } catch {
       this.currentUserId.set(tokenUserId ?? null);
@@ -276,27 +279,44 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         const returned = this.extractReview(res);
         if (reviewId && currentReview) {
-          const updated = { ...currentReview, ...returned, ...payload, user: currentReview.user } as Review;
+          const updated = {
+            ...currentReview,
+            ...returned,
+            ...payload,
+            user: currentReview.user,
+          } as Review;
           this.replaceReview(reviewId, updated);
         } else {
-          const created = (returned ? {
-            ...returned,
-            user: returned.user ?? { _id: this.currentUserId() ?? '', name: this.getCurrentUserName() },
-          } : {
-            _id: res?.data?._id ?? res?._id ?? `local-${Date.now()}`,
-            product: this.product()._id,
-            user: { _id: this.currentUserId() ?? '', name: this.getCurrentUserName() },
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }) as Review;
+          const created = (
+            returned
+              ? {
+                  ...returned,
+                  user: returned.user ?? {
+                    _id: this.currentUserId() ?? '',
+                    name: this.getCurrentUserName(),
+                  },
+                }
+              : {
+                  _id: res?.data?._id ?? res?._id ?? `local-${Date.now()}`,
+                  product: this.product()._id,
+                  user: { _id: this.currentUserId() ?? '', name: this.getCurrentUserName() },
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                }
+          ) as Review;
           const reviews = this.product().reviews ?? [];
-          this.updateProductReviews([...reviews.filter((item) => !this.ownsReview(item)), { ...created, ...payload }]);
+          this.updateProductReviews([
+            ...reviews.filter((item) => !this.ownsReview(item)),
+            { ...created, ...payload },
+          ]);
         }
         this.loadProductReviews();
         this.reviewFormOpen.set(false);
         this.editingReviewId.set(null);
         this.reviewForm.reset({ review: '', rating: 5 });
-        this.toastr.success(this.translateReviewMessage(reviewId ? 'REVIEW_UPDATED' : 'REVIEW_ADDED'));
+        this.toastr.success(
+          this.translateReviewMessage(reviewId ? 'REVIEW_UPDATED' : 'REVIEW_ADDED'),
+        );
         this.savingReview.set(false);
       },
       error: () => {
@@ -311,7 +331,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     this.deletingReviewId.set(review._id);
     this.userService.deleteReviewForProduct(review._id).subscribe({
       next: (res: any) => {
-        this.updateProductReviews((this.product().reviews ?? []).filter((item) => item._id !== review._id));
+        this.updateProductReviews(
+          (this.product().reviews ?? []).filter((item) => item._id !== review._id),
+        );
         this.loadProductReviews();
         this.toastr.success(this.translateReviewMessage('REVIEW_DELETED'));
         this.deletingReviewId.set(null);
@@ -325,12 +347,17 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
   private extractReview(res: any): Review | undefined {
     const data = res?.data;
-    const candidate = data?.review ?? data?.reviews?.find?.((item: Review) => this.ownsReview(item)) ?? data;
-    return candidate && typeof candidate.review === 'string' && candidate._id ? candidate as Review : undefined;
+    const candidate =
+      data?.review ?? data?.reviews?.find?.((item: Review) => this.ownsReview(item)) ?? data;
+    return candidate && typeof candidate.review === 'string' && candidate._id
+      ? (candidate as Review)
+      : undefined;
   }
 
   private replaceReview(id: string, review: Review): void {
-    this.updateProductReviews((this.product().reviews ?? []).map((item) => item._id === id ? review : item));
+    this.updateProductReviews(
+      (this.product().reviews ?? []).map((item) => (item._id === id ? review : item)),
+    );
   }
 
   private updateProductReviews(reviews: Review[]): void {
@@ -339,7 +366,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
 
   private updateReviewSummary(reviews: Review[]): void {
-    const counts = [1, 2, 3, 4, 5].map((rating) => reviews.filter((item) => item.rating === rating).length);
+    const counts = [1, 2, 3, 4, 5].map(
+      (rating) => reviews.filter((item) => item.rating === rating).length,
+    );
     const denominator = reviews.length || 1;
     this.reviewsStatus.set({
       oneStar: Math.round((counts[0] / denominator) * 100),
@@ -351,7 +380,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     this.product.update((product) => ({
       ...product,
       ratingsQuantity: reviews.length,
-      ratingsAverage: reviews.length ? Number((reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length).toFixed(1)) : 0,
+      ratingsAverage: reviews.length
+        ? Number((reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length).toFixed(1))
+        : 0,
     }));
   }
 
@@ -359,7 +390,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     if (!isPlatformBrowser(this.platformId)) return '';
     try {
       const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
-      return rawUser ? (JSON.parse(rawUser) as { name?: string }).name ?? '' : '';
+      return rawUser ? ((JSON.parse(rawUser) as { name?: string }).name ?? '') : '';
     } catch {
       return '';
     }
@@ -386,30 +417,58 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
 
   addToWithList(productId: string): void {
-    const exists = this.userService.wishlistIds().has(productId);
-    const action = exists
-      ? this.userService.removefromWithList(productId)
-      : this.userService.addToWithList({ productId });
-    action.subscribe((res: any) => {
-      this.userService.setWishlistMembership(productId, !exists);
-      this.toastr.success(res.message, 'Fresh Cart');
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      let token = localStorage.getItem('token');
+      if (!token) token = sessionStorage.getItem('token');
+      if (token) {
+        const exists = this.userService.wishlistIds().has(productId);
+        const action = exists
+          ? this.userService.removefromWithList(productId)
+          : this.userService.addToWithList({ productId });
+        action.subscribe((res: any) => {
+          this.userService.setWishlistMembership(productId, !exists);
+          this.toastr.success(res.message, 'Fresh Cart');
+        });
+      } else {
+        this.toastr.warning('plz login frist!');
+      }
+    }
   }
 
   addToCart(id: string) {
-    this.adding.set(true);
-    this.done.set(false);
-    const payload = {
-      productId: id,
-    };
-    this.userService.addToCart(payload).subscribe((res: any) => {
-      this.toastr.success(res.message, 'Fresh Cart');
-      this.userService.refreshCartCount();
-      this.adding.set(false);
-      this.done.set(true);
-      setTimeout(() => {
+    if (isPlatformBrowser(this.platformId)) {
+      let token = localStorage.getItem('token');
+      if (!token) token = sessionStorage.getItem('token');
+      if (token) {
+        this.adding.set(true);
         this.done.set(false);
-      }, 1000);
-    });
+        const payload = {
+          productId: id,
+        };
+        this.userService.addToCart(payload).subscribe((res: any) => {
+          this.toastr.success(res.message, 'Fresh Cart');
+          this.userService.refreshCartCount();
+          this.adding.set(false);
+          this.done.set(true);
+          setTimeout(() => {
+            this.done.set(false);
+          }, 1000);
+        });
+      } else {
+        this.toastr.warning('plz login frist!');
+      }
+    }
+  }
+
+  goToCheckOut(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      let token = localStorage.getItem('token');
+      if (!token) token = sessionStorage.getItem('token');
+      if (token) {
+        this.router.navigate(['/checkout']);
+      } else {
+        this.toastr.warning('plz login frist!');
+      }
+    }
   }
 }
