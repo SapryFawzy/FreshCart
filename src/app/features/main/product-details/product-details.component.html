@@ -1,0 +1,1544 @@
+@if (doneLoading()) {
+  <nav [aria-label]="'UI.BREADCRUMB' | translate" class="py-4">
+    <div class="container mx-auto px-4">
+      <ol class="flex items-center flex-wrap gap-1 text-sm">
+        <li class="flex items-center">
+          <a
+            class="text-gray-500 hover:text-green-600 transition flex items-center gap-1.5"
+            routerLink="/home"
+          >
+            {{ 'UI.HOME' | translate }}
+          </a>
+          <svg
+            data-prefix="fas"
+            width="0.5rem"
+            hight="0.5rem"
+            data-icon="chevron-right"
+            class="svg-inline--fa fa-chevron-right text-gray-400 text-xs mx-2"
+            role="img"
+            viewBox="0 0 320 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+            ></path>
+          </svg>
+        </li>
+        <li class="flex items-center">
+          <a
+            class="text-gray-500 hover:text-green-600 transition flex items-center gap-1.5"
+            routerLink="/categories"
+            >{{ 'UI.CATEGORIES' | translate }}
+          </a>
+          <svg
+            data-prefix="fas"
+            width="0.5rem"
+            hight="0.5rem"
+            data-icon="chevron-right"
+            class="svg-inline--fa fa-chevron-right text-gray-400 text-xs mx-2"
+            role="img"
+            viewBox="0 0 320 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+            ></path>
+          </svg>
+        </li>
+        <li class="flex items-center">
+          <a
+            class="text-gray-500 hover:text-green-600 transition flex items-center gap-1.5"
+            routerLink="/shop"
+            [queryParams]="{ category: product().category._id }"
+            >{{ product().category.name }}
+          </a>
+          <svg
+            data-prefix="fas"
+            width="0.5rem"
+            hight="0.5rem"
+            data-icon="chevron-right"
+            class="svg-inline--fa fa-chevron-right text-gray-400 text-xs mx-2"
+            role="img"
+            viewBox="0 0 320 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+            ></path>
+          </svg>
+        </li>
+        <li class="flex items-center">
+          <a
+            class="text-gray-500 hover:text-green-600 transition flex items-center gap-1.5"
+            [routerLink]="['/subcategories', product().subcategory[0]._id]"
+            >{{ 'UI.SUBCATEGORIES_OF' | translate }} ( {{ product().category.name }} )
+          </a>
+          <svg
+            data-prefix="fas"
+            width="0.5rem"
+            hight="0.5rem"
+            data-icon="chevron-right"
+            class="svg-inline--fa fa-chevron-right text-gray-400 text-xs mx-2"
+            role="img"
+            viewBox="0 0 320 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+            ></path>
+          </svg>
+        </li>
+        <li class="text-gray-900 font-medium truncate max-w-xs">{{ product().title }}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="py-6">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div class="lg:w-1/4">
+          <div class="bg-white rounded-xl shadow-sm p-4 sticky top-4">
+            <div #imageGallerySwipe class="overflow-x-hidden">
+              <div #imageGallerySlides class="flex gap-0.5 transition-all duration-500">
+                @for (img of product().images; track $index) {
+                  <div
+                    [aria-label]="'Slide ' + $index + 1"
+                    tabindex="-1"
+                    class="shrink-0 w-full"
+                    role="img"
+                  >
+                    <img
+                      class="w-full object-cover rounded-sm"
+                      [src]="img"
+                      [alt]="product().title"
+                    />
+                  </div>
+                }
+              </div>
+            </div>
+            <div #imageBtnSwipe class="overflow-x-hidden mt-1.5">
+              <div
+                #thumbnailNavigationBar
+                class="flex gap-0.5 transition-all duration-500"
+                [aria-label]="'UI.THUMBNAIL_NAVIGATION' | translate"
+              >
+                @for (img of product().images; track $index) {
+                  <button
+                    #btn
+                    (click)="moveSlider(btn)"
+                    type="button"
+                    [tabindex]="$index"
+                    aria-pressed="true"
+                    [aria-label]="'Go to Slide ' + $index"
+                    [class.active]="selectedImageIndex() === $index"
+                    class="shrink-0 w-25 cursor-pointer border-4 border-transparent transition-all duration-500 hover:border-blue-500"
+                  >
+                    <img class="w-full object-cover" [alt]="product().title" [src]="img" />
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lg:w-3/4">
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex flex-wrap gap-2 mb-4">
+              <a
+                class="bg-green-50 text-green-700 font-medium text-xs px-3 py-1.5 rounded-full hover:bg-green-100 transition"
+                [routerLink]="['/categories/', product().category._id]"
+                >{{ product().category.name }}</a
+              ><span
+                class="bg-gray-100 text-gray-700 font-medium text-xs px-3 py-1.5 rounded-full"
+                >{{ product().brand.name }}</span
+              >
+            </div>
+            <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">{{ product().title }}</h1>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="text-yellow-400 flex">
+                @for (star of stars; track $index) {
+                  @if ($index < +product().ratingsAverage.toString().split('.')[0]) {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="17"
+                      viewBox="0 0 18 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M9.26802 0.409375C9.1399 0.159375 8.88052 0 8.59927 0C8.31802 0 8.05865 0.159375 7.93052 0.409375L5.63052 4.91563L0.633649 5.70937C0.355524 5.75312 0.124274 5.95 0.0367741 6.21875C-0.0507259 6.4875 0.0211491 6.78125 0.218024 6.98125L3.79302 10.5594L3.00552 15.5562C2.96177 15.8344 3.0774 16.1156 3.30552 16.2812C3.53365 16.4469 3.83365 16.4719 4.08677 16.3438L8.59927 14.05L13.1086 16.3438C13.3586 16.4719 13.6618 16.4469 13.8899 16.2812C14.118 16.1156 14.2336 15.8375 14.1899 15.5562L13.3993 10.5594L16.9743 6.98125C17.1743 6.78125 17.243 6.4875 17.1555 6.21875C17.068 5.95 16.8399 5.75312 16.5586 5.70937L11.5649 4.91563L9.26802 0.409375Z"
+                        fill="#FCC800"
+                      />
+                    </svg>
+                  } @else if (
+                    product().ratingsAverage % 1 >= 0.5 &&
+                    $index === +product().ratingsAverage.toString().split('.')[0]
+                  ) {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="17"
+                      viewBox="0 0 18 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M9.26802 0.409375C9.1399 0.159375 8.88052 0 8.59927 0C8.31802 0 8.05865 0.159375 7.93052 0.409375L5.63052 4.91563L0.633649 5.70937C0.355524 5.75312 0.124274 5.95 0.0367741 6.21875C-0.0507259 6.4875 0.0211491 6.78125 0.218024 6.98125L3.79302 10.5594L3.00552 15.5562C2.96177 15.8344 3.0774 16.1156 3.30552 16.2812C3.53365 16.4469 3.83365 16.4719 4.08677 16.3438L8.59927 14.05L13.1086 16.3438C13.3586 16.4719 13.6618 16.4469 13.8899 16.2812C14.118 16.1156 14.2336 15.8375 14.1899 15.5562L13.3993 10.5594L16.9743 6.98125C17.1743 6.78125 17.243 6.4875 17.1555 6.21875C17.068 5.95 16.8399 5.75312 16.5586 5.70937L11.5649 4.91563L9.26802 0.409375ZM7.84927 3.86875V12.7469L4.72115 14.3375L5.3399 10.4156C5.3774 10.1781 5.29927 9.9375 5.13052 9.76875L2.32427 6.95937L6.24615 6.33437C6.48365 6.29688 6.68677 6.14687 6.79615 5.93437L7.8524 3.86562L7.84927 3.86875ZM9.34927 12.7469V3.86875L10.4055 5.9375C10.5149 6.15 10.718 6.3 10.9555 6.3375L14.8774 6.9625L12.0711 9.77188C11.9024 9.94063 11.8243 10.1812 11.8618 10.4187L12.4805 14.3406L9.3524 12.75L9.34927 12.7469Z"
+                        fill="#FCC800"
+                      />
+                    </svg>
+                  } @else {
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="17"
+                      viewBox="0 0 18 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M8.59669 0C8.87794 0 9.13732 0.159375 9.26544 0.409375L11.5623 4.91563L16.5592 5.70937C16.8373 5.75312 17.0686 5.95 17.1561 6.21875C17.2436 6.4875 17.1717 6.78125 16.9748 6.98125L13.3967 10.5594L14.1873 15.5562C14.2311 15.8344 14.1154 16.1156 13.8873 16.2812C13.6592 16.4469 13.3561 16.4719 13.1061 16.3438L8.59669 14.05L4.08732 16.3438C3.83732 16.4719 3.53419 16.4469 3.30607 16.2812C3.07794 16.1156 2.96232 15.8375 3.00607 15.5562L3.79357 10.5594L0.218568 6.98125C0.0185681 6.78125 -0.0501819 6.4875 0.0373181 6.21875C0.124818 5.95 0.352943 5.75312 0.634193 5.70937L5.63107 4.91563L7.93107 0.409375C8.05919 0.159375 8.31857 0 8.59982 0H8.59669ZM8.59669 2.4L6.79044 5.9375C6.68107 6.15 6.47794 6.3 6.24044 6.3375L2.31857 6.9625L5.12482 9.77188C5.29357 9.94063 5.37169 10.1812 5.33419 10.4187L4.71544 14.3406L8.25607 12.5406C8.46857 12.4312 8.72169 12.4312 8.93732 12.5406L12.4779 14.3406L11.8592 10.4187C11.8217 10.1812 11.8998 9.94063 12.0686 9.77188L14.8748 6.9625L10.9529 6.3375C10.7154 6.3 10.5123 6.15 10.4029 5.9375L8.59669 2.4Z"
+                        fill="#FCC800"
+                      />
+                    </svg>
+                  }
+                }
+              </div>
+              <span class="text-sm text-gray-600 font-medium"
+                >{{ product().ratingsAverage }} ({{ product().reviews?.length }} reviews)</span
+              >
+            </div>
+            <div class="flex items-center flex-wrap gap-3 mb-6">
+              <span class="text-3xl font-bold text-gray-900">{{ product().price }} EGP</span>
+            </div>
+            @if (product().quantity) {
+              <div class="flex items-center gap-2 mb-6">
+                <span
+                  class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-green-50 text-green-700"
+                  ><span class="w-2 h-2 rounded-full font-medium bg-green-500"></span
+                  >{{ 'UI.IN_STOCK' | translate }}</span
+                >
+              </div>
+            } @else {
+              <div class="flex items-center gap-2 mb-6">
+                <span
+                  class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-red-50 text-red-700"
+                  ><span class="w-2 h-2 rounded-full font-medium bg-red-500"></span
+                  >{{ 'UI.OUT_OF_STOCK' | translate }}</span
+                >
+              </div>
+            }
+            <div class="border-t border-gray-100 pt-5 mb-6">
+              <p class="text-gray-600 leading-relaxed">
+                {{ product().description }}
+              </p>
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{
+                'UI.QUANTITY' | translate
+              }}</label>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden">
+                  <button
+                    (click)="changeQuantity(-1)"
+                    [class.disabled:opacity-50]="isMin()"
+                    class="px-4 py-4 text-gray-600 hover:bg-gray-100 hover:text-green-600 transition"
+                    [disabled]="isMin()"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="2"
+                      viewBox="0 0 14 2"
+                      fill="none"
+                    >
+                      <path
+                        d="M0 1C0 0.446875 0.446875 0 1 0H13C13.5531 0 14 0.446875 14 1C14 1.55313 13.5531 2 13 2H1C0.446875 2 0 1.55313 0 1Z"
+                        fill="#4A5565"
+                      />
+                    </svg>
+                  </button>
+                  <input
+                    (change)="setTotalePrice()"
+                    [formControl]="quantity"
+                    min="1"
+                    [max]="product().quantity"
+                    class="w-16 text-center border-0 focus:ring-0 focus:outline-none text-lg font-medium"
+                    type="number"
+                    value="1"
+                  />
+                  <button
+                    (click)="changeQuantity(1)"
+                    [class.disabled:opacity-50]="isMax()"
+                    class="px-4 py-3 text-gray-600 hover:bg-gray-100 hover:text-green-600 transition"
+                    [disabled]="isMax()"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                    >
+                      <path
+                        d="M8 1C8 0.446875 7.55312 0 7 0C6.44688 0 6 0.446875 6 1V6H1C0.446875 6 0 6.44688 0 7C0 7.55312 0.446875 8 1 8H6V13C6 13.5531 6.44688 14 7 14C7.55312 14 8 13.5531 8 13V8H13C13.5531 8 14 7.55312 14 7C14 6.44688 13.5531 6 13 6H8V1Z"
+                        fill="#4A5565"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <span class="text-sm text-gray-500">{{ product().quantity }} available</span>
+              </div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600 font-medium">{{ 'UI.TOTAL_PRICE' | translate }}</span
+                ><span class="text-2xl font-bold text-green-600">{{ totalePrice() }} EGP</span>
+              </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 mb-6">
+              <button
+                (click)="addToCart(product()._id)"
+                class="flex-1 cursor-pointer text-white py-3.5 px-6 rounded-xl font-medium hover:bg-green-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-600/25 bg-green-600"
+              >
+                @if (adding()) {
+                  <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+                } @else if (done()) {
+                  <i class="fa-solid fa-check"></i>
+                } @else {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="17"
+                    viewBox="0 0 18 17"
+                    fill="none"
+                  >
+                    <path
+                      d="M0.75 0C0.334375 0 0 0.334375 0 0.75C0 1.16562 0.334375 1.5 0.75 1.5H2.16563C2.2875 1.5 2.39062 1.5875 2.4125 1.70625L4.04063 10.6531C4.23438 11.7219 5.16563 12.5 6.25313 12.5H14.25C14.6656 12.5 15 12.1656 15 11.75C15 11.3344 14.6656 11 14.25 11H6.25313C5.89062 11 5.58125 10.7406 5.51562 10.3844L5.35625 9.5H14.8438C15.8062 9.5 16.6313 8.81563 16.8094 7.86875L17.7781 2.68438C17.8938 2.06875 17.4219 1.5 16.7938 1.5H3.89687L3.88438 1.4375C3.73438 0.60625 3.00937 0 2.1625 0H0.75ZM6.5 16.5C6.89782 16.5 7.27936 16.342 7.56066 16.0607C7.84196 15.7794 8 15.3978 8 15C8 14.6022 7.84196 14.2206 7.56066 13.9393C7.27936 13.658 6.89782 13.5 6.5 13.5C6.10218 13.5 5.72064 13.658 5.43934 13.9393C5.15804 14.2206 5 14.6022 5 15C5 15.3978 5.15804 15.7794 5.43934 16.0607C5.72064 16.342 6.10218 16.5 6.5 16.5ZM13.5 16.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15C15 14.6022 14.842 14.2206 14.5607 13.9393C14.2794 13.658 13.8978 13.5 13.5 13.5C13.1022 13.5 12.7206 13.658 12.4393 13.9393C12.158 14.2206 12 14.6022 12 15C12 15.3978 12.158 15.7794 12.4393 16.0607C12.7206 16.342 13.1022 16.5 13.5 16.5Z"
+                      fill="white"
+                    />
+                  </svg>
+                }
+                Add to Cart
+              </button>
+              <button
+                routerLink="/checkout"
+                class="flex-1 cursor-pointer bg-gray-900 text-white py-3.5 px-6 rounded-xl font-medium hover:bg-gray-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="17"
+                  viewBox="0 0 14 17"
+                  fill="none"
+                >
+                  <path
+                    d="M10.5878 0.191152C10.9597 0.459902 11.0972 0.947402 10.9285 1.3724L8.47847 7.50053H13.0003C13.4222 7.50053 13.7972 7.76303 13.941 8.1599C14.0847 8.55678 13.9628 9.00053 13.641 9.26928L4.64097 16.7693C4.28784 17.063 3.78472 17.0787 3.41284 16.8099C3.04097 16.5412 2.90347 16.0537 3.07222 15.6287L5.52222 9.50053H1.00034C0.578466 9.50053 0.203466 9.23803 0.0597157 8.84115C-0.0840343 8.44428 0.0378407 8.00053 0.359716 7.73178L9.35972 0.231777C9.71284 -0.0619728 10.216 -0.0775978 10.5878 0.191152Z"
+                    fill="white"
+                  />
+                </svg>
+                {{ 'UI.BUY_NOW' | translate }}
+              </button>
+            </div>
+            <div class="flex gap-3 mb-6">
+              <button
+                [class.bg-red-500!]="isProductInWishList()"
+                [class.text-white!]="isProductInWishList()"
+                (click)="addToWithList(product()._id)"
+                class="flex-1 cursor-pointer border-2 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 border-gray-200 text-gray-700 hover:border-green-300 hover:text-green-600"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="14"
+                  viewBox="0 0 16 14"
+                  fill="none"
+                >
+                  <path
+                    d="M11.8406 1.5C10.9875 1.5 10.1844 1.90937 9.68437 2.6L8.60938 4.0875C8.46875 4.28125 8.24375 4.39687 8.00313 4.39687C7.7625 4.39687 7.5375 4.28125 7.39687 4.0875L6.32188 2.6C5.82188 1.90937 5.01875 1.5 4.16563 1.5C2.69688 1.5 1.50625 2.69063 1.50625 4.15938C1.50625 5.71875 2.50625 7.23438 3.63438 8.60625C4.91875 10.1687 6.49062 11.5438 7.56875 12.3656C7.66875 12.4406 7.81563 12.4969 8.00625 12.4969C8.19688 12.4969 8.34375 12.4406 8.44375 12.3656C9.52188 11.5438 11.0938 10.1656 12.3781 8.60625C13.5094 7.23438 14.5063 5.71875 14.5063 4.15938C14.5063 2.69063 13.3156 1.5 11.8469 1.5H11.8406ZM8.46875 1.72187C9.25 0.640625 10.5062 0 11.8406 0C14.1375 0 16 1.8625 16 4.15938C16 6.30313 14.6594 8.1875 13.5281 9.55937C12.15 11.2344 10.4875 12.6875 9.34688 13.5562C8.9625 13.85 8.4875 13.9969 8 13.9969C7.5125 13.9969 7.0375 13.85 6.65312 13.5562C5.5125 12.6875 3.85 11.2344 2.47187 9.5625C1.34062 8.19063 0 6.30313 0 4.15938C0 1.8625 1.8625 0 4.15938 0C5.49375 0 6.75 0.640625 7.53125 1.72187L8 2.36875L8.46875 1.72187Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                {{ 'UI.ADD_TO_WISHLIST' | translate }}
+              </button>
+              <button
+                class="border-2 cursor-pointer border-gray-200 text-gray-700 py-3 px-4 rounded-xl hover:border-green-300 hover:text-green-600 transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="16"
+                  viewBox="0 0 15 16"
+                  fill="none"
+                >
+                  <path
+                    d="M12 6C13.6562 6 15 4.65625 15 3C15 1.34375 13.6562 0 12 0C10.3438 0 9 1.34375 9 3C9 3.16875 9.01562 3.3375 9.04062 3.5L4.9875 5.75313C4.45938 5.28438 3.7625 5 3 5C1.34375 5 0 6.34375 0 8C0 9.65625 1.34375 11 3 11C3.7625 11 4.45625 10.7156 4.9875 10.2469L9.04062 12.5C9.0125 12.6625 9 12.8281 9 13C9 14.6562 10.3438 16 12 16C13.6562 16 15 14.6562 15 13C15 11.3438 13.6562 10 12 10C11.2375 10 10.5437 10.2844 10.0125 10.7531L5.95937 8.5C5.9875 8.3375 6 8.17188 6 8C6 7.82812 5.98438 7.6625 5.95937 7.5L10.0125 5.24687C10.5406 5.71562 11.2375 6 12 6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div class="border-t border-gray-100 pt-6">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="h-10 w-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="15"
+                      viewBox="0 0 20 15"
+                      fill="none"
+                    >
+                      <path
+                        d="M2 2C2 0.896875 2.89687 0 4 0H13C14.1031 0 15 0.896875 15 2V3H16.5844C17.1156 3 17.625 3.20937 18 3.58437L19.4156 5C19.7906 5.375 20 5.88438 20 6.41563V11C20 12.1031 19.1031 13 18 13H17.8969C17.5719 14.1531 16.5094 15 15.25 15C13.9906 15 12.9312 14.1531 12.6031 13H9.39688C9.07188 14.1531 8.00937 15 6.75 15C5.49062 15 4.43125 14.1531 4.10313 13H4C2.89687 13 2 12.1031 2 11V9.5H0.75C0.334375 9.5 0 9.16562 0 8.75C0 8.33438 0.334375 8 0.75 8H4.25C4.66563 8 5 7.66563 5 7.25C5 6.83437 4.66563 6.5 4.25 6.5H0.75C0.334375 6.5 0 6.16563 0 5.75C0 5.33437 0.334375 5 0.75 5H6.25C6.66563 5 7 4.66563 7 4.25C7 3.83437 6.66563 3.5 6.25 3.5H0.75C0.334375 3.5 0 3.16563 0 2.75C0 2.33437 0.334375 2 0.75 2H2ZM18 8V6.41563L16.5844 5H15V8H18ZM8 12.25C8 11.9185 7.8683 11.6005 7.63388 11.3661C7.39946 11.1317 7.08152 11 6.75 11C6.41848 11 6.10054 11.1317 5.86612 11.3661C5.6317 11.6005 5.5 11.9185 5.5 12.25C5.5 12.5815 5.6317 12.8995 5.86612 13.1339C6.10054 13.3683 6.41848 13.5 6.75 13.5C7.08152 13.5 7.39946 13.3683 7.63388 13.1339C7.8683 12.8995 8 12.5815 8 12.25ZM15.25 13.5C15.5815 13.5 15.8995 13.3683 16.1339 13.1339C16.3683 12.8995 16.5 12.5815 16.5 12.25C16.5 11.9185 16.3683 11.6005 16.1339 11.3661C15.8995 11.1317 15.5815 11 15.25 11C14.9185 11 14.6005 11.1317 14.3661 11.3661C14.1317 11.6005 14 11.9185 14 12.25C14 12.5815 14.1317 12.8995 14.3661 13.1339C14.6005 13.3683 14.9185 13.5 15.25 13.5Z"
+                        fill="#16A34A"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900 text-sm">
+                      {{ 'UI.FREE_DELIVERY' | translate }}
+                    </h4>
+                    <p class="text-xs text-gray-500">{{ 'UI.ORDERS_OVER_50' | translate }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div
+                    class="h-10 w-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M8 2C6.225 2 4.62813 2.77187 3.52813 4H5C5.55312 4 6 4.44688 6 5C6 5.55312 5.55312 6 5 6H1C0.446875 6 0 5.55312 0 5V1C0 0.446875 0.446875 0 1 0C1.55313 0 2 0.446875 2 1V2.70937C3.46563 1.05 5.60938 0 8 0C12.4187 0 16 3.58125 16 8C16 12.4187 12.4187 16 8 16C5.28125 16 2.87813 14.6437 1.43438 12.5719C1.11875 12.1187 1.22812 11.4969 1.68125 11.1781C2.13438 10.8594 2.75625 10.9719 3.075 11.425C4.1625 12.9812 5.9625 13.9969 8 13.9969C11.3125 13.9969 14 11.3094 14 7.99687C14 4.68437 11.3125 2 8 2Z"
+                        fill="#16A34A"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900 text-sm">
+                      {{ 'UI.30_DAYS_RETURN' | translate }}
+                    </h4>
+                    <p class="text-xs text-gray-500">{{ 'UI.MONEY_BACK' | translate }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div
+                    class="h-10 w-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="15"
+                      height="16"
+                      viewBox="0 0 15 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M7.49689 0C7.64064 0 7.78439 0.03125 7.91564 0.090625L13.8031 2.5875C14.4906 2.87813 15.0031 3.55625 15 4.375C14.9844 7.475 13.7094 13.1469 8.32501 15.725C7.80314 15.975 7.19689 15.975 6.67501 15.725C1.28751 13.1469 0.0156392 7.475 1.4214e-05 4.375C-0.00311079 3.55625 0.509389 2.87813 1.19689 2.5875L7.08126 0.090625C7.21251 0.03125 7.35314 0 7.49689 0ZM7.49689 2.0875V13.9031C11.8094 11.8156 12.9688 7.19063 12.9969 4.42188L7.49689 2.09063V2.0875Z"
+                        fill="#16A34A"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-gray-900 text-sm">
+                      {{ 'UI.SECURE_PAYMENT' | translate }}
+                    </h4>
+                    <p class="text-xs text-gray-500">{{ 'UI.100_PROTECTED' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-8">
+    <div class="container mx-auto px-4">
+      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="border-b border-gray-200">
+          <div class="flex overflow-x-auto scrollbar-hide">
+            <button
+              (click)="changeNavAndTabsFlag(1)"
+              [class]="
+                navAndTabsFlag() === 1
+                  ? 'text-green-600 border-b-2 border-green-600 bg-green-50/50'
+                  : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
+              "
+              class="flex cursor-pointer items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="13"
+                viewBox="0 0 13 13"
+                fill="none"
+              >
+                <path
+                  d="M10.1008 3.0625L9.16289 1.75H3.08984L2.15195 3.0625H10.1008ZM0 3.62305C0 3.25938 0.114844 2.90391 0.325391 2.60586L1.66523 0.732812C1.99336 0.273438 2.52383 0 3.08711 0H9.16016C9.72617 0 10.2566 0.273438 10.5848 0.732812L11.9219 2.60586C12.1352 2.90391 12.2473 3.25938 12.2473 3.62305L12.25 10.9375C12.25 11.9027 11.4652 12.6875 10.5 12.6875H1.75C0.784766 12.6875 0 11.9027 0 10.9375V3.62305Z"
+                  fill="currentColor"
+                />
+              </svg>
+              {{ 'UI.PRODUCT_DETAILS' | translate }}
+            </button>
+            <button
+              [class]="
+                navAndTabsFlag() === 2
+                  ? 'text-green-600 border-b-2 border-green-600 bg-green-50/50'
+                  : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
+              "
+              (click)="changeNavAndTabsFlag(2)"
+              class="flex cursor-pointer items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="15"
+                viewBox="0 0 16 15"
+                fill="none"
+              >
+                <path
+                  d="M8.10952 0.358203C7.99741 0.139453 7.77046 0 7.52437 0C7.27827 0 7.05132 0.139453 6.93921 0.358203L4.92671 4.30117L0.554443 4.9957C0.311084 5.03398 0.10874 5.20625 0.0321773 5.44141C-0.0443852 5.67656 0.0185054 5.93359 0.190771 6.10859L3.3189 9.23945L2.62983 13.6117C2.59155 13.8551 2.69272 14.1012 2.89233 14.2461C3.09194 14.391 3.35444 14.4129 3.57593 14.3008L7.52437 12.2937L11.4701 14.3008C11.6888 14.4129 11.9541 14.391 12.1537 14.2461C12.3533 14.1012 12.4544 13.8578 12.4162 13.6117L11.7244 9.23945L14.8525 6.10859C15.0275 5.93359 15.0876 5.67656 15.0111 5.44141C14.9345 5.20625 14.7349 5.03398 14.4888 4.9957L10.1193 4.30117L8.10952 0.358203Z"
+                  fill="currentColor"
+                />
+              </svg>
+              {{ 'UI.CUSTOMER_REVIEWS' | translate }} ({{ product().reviews?.length }})
+            </button>
+            <button
+              [class]="
+                navAndTabsFlag() === 3
+                  ? 'text-green-600 border-b-2 border-green-600 bg-green-50/50'
+                  : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
+              "
+              (click)="changeNavAndTabsFlag(3)"
+              class="flex cursor-pointer items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="14"
+                viewBox="0 0 16 14"
+                fill="none"
+              >
+                <path
+                  d="M0 1.75C0 0.784766 0.784766 0 1.75 0H9.625C10.5902 0 11.375 0.784766 11.375 1.75V2.625H12.7613C13.2262 2.625 13.6719 2.8082 14 3.13633L15.2387 4.375C15.5668 4.70312 15.75 5.14883 15.75 5.61367V9.625C15.75 10.5902 14.9652 11.375 14 11.375H13.9098C13.6254 12.384 12.6957 13.125 11.5938 13.125C10.4918 13.125 9.56484 12.384 9.27773 11.375H6.47227C6.18789 12.384 5.2582 13.125 4.15625 13.125C3.0543 13.125 2.12734 12.384 1.84023 11.375H1.75C0.784766 11.375 0 10.5902 0 9.625V1.75ZM14 7V5.61367L12.7613 4.375H11.375V7H14ZM5.25 10.7188C5.25 10.4287 5.13477 10.1505 4.92965 9.94535C4.72453 9.74023 4.44633 9.625 4.15625 9.625C3.86617 9.625 3.58797 9.74023 3.38285 9.94535C3.17773 10.1505 3.0625 10.4287 3.0625 10.7188C3.0625 11.0088 3.17773 11.287 3.38285 11.4921C3.58797 11.6973 3.86617 11.8125 4.15625 11.8125C4.44633 11.8125 4.72453 11.6973 4.92965 11.4921C5.13477 11.287 5.25 11.0088 5.25 10.7188ZM11.5938 11.8125C11.8838 11.8125 12.162 11.6973 12.3671 11.4921C12.5723 11.287 12.6875 11.0088 12.6875 10.7188C12.6875 10.4287 12.5723 10.1505 12.3671 9.94535C12.162 9.74023 11.8838 9.625 11.5938 9.625C11.3037 9.625 11.0255 9.74023 10.8204 9.94535C10.6152 10.1505 10.5 10.4287 10.5 10.7188C10.5 11.0088 10.6152 11.287 10.8204 11.4921C11.0255 11.6973 11.3037 11.8125 11.5938 11.8125Z"
+                  fill="currentColor"
+                />
+              </svg>
+              Shipping &amp; Returns
+            </button>
+          </div>
+        </div>
+        @if (navAndTabsFlag() === 1) {
+          <div class="p-6">
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                  {{ 'UI.ABOUT_THIS_PRODUCT' | translate }}
+                </h3>
+                <p class="text-gray-600 leading-relaxed">
+                  Material Polyester Blend Colour Name Multicolour Department Women
+                </p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-medium text-gray-900 mb-3">
+                    {{ 'UI.PRODUCT_INFORMATION' | translate }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="flex justify-between text-sm">
+                      <span class="text-gray-500">{{ 'UI.CATEGORY' | translate }}</span
+                      ><span class="text-gray-900 font-medium">{{ product().category.name }}</span>
+                    </li>
+                    <li class="flex justify-between text-sm">
+                      <span class="text-gray-500">{{ 'UI.SUBCATEGORY' | translate }}</span
+                      ><span class="text-gray-900 font-medium">{{
+                        product().subcategory[0].name
+                      }}</span>
+                    </li>
+                    <li class="flex justify-between text-sm">
+                      <span class="text-gray-500">{{ 'UI.BRAND' | translate }}</span
+                      ><span class="text-gray-900 font-medium">{{ product().brand.name }}</span>
+                    </li>
+                    <li class="flex justify-between text-sm">
+                      <span class="text-gray-500">{{ 'UI.ITEMS_SOLD' | translate }}</span
+                      ><span class="text-gray-900 font-medium">{{ product().sold }}+ Sold</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="font-medium text-gray-900 mb-3">
+                    {{ 'UI.KEY_FEATURES' | translate }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li class="flex items-center text-sm text-gray-600">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mr-2 w-4"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      >{{ 'UI.PREMIUM_QUALITY_PRODUCT' | translate }}
+                    </li>
+                    <li class="flex items-center text-sm text-gray-600">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mr-2 w-4"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      >100% Authentic Guarantee
+                    </li>
+                    <li class="flex items-center text-sm text-gray-600">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mr-2 w-4"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      >{{ 'UI.FAST_SECURE_PACKAGING' | translate }}
+                    </li>
+                    <li class="flex items-center text-sm text-gray-600">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mr-2 w-4"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      >{{ 'UI.QUALITY_TESTED' | translate }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else if (navAndTabsFlag() === 2) {
+          <div class="p-6">
+            <div class="space-y-6">
+              <div class="flex flex-col md:flex-row gap-8 items-start md:items-center">
+                <div class="text-center">
+                  <div class="text-5xl font-bold text-gray-900 mb-2">
+                    {{ product().ratingsAverage }}/5
+                  </div>
+                  <div class="text-yellow-400 flex justify-center">
+                    @for (star of stars; track $index) {
+                      @if ($index < +product().ratingsAverage.toString().split('.')[0]) {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="17"
+                          viewBox="0 0 18 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M9.26802 0.409375C9.1399 0.159375 8.88052 0 8.59927 0C8.31802 0 8.05865 0.159375 7.93052 0.409375L5.63052 4.91563L0.633649 5.70937C0.355524 5.75312 0.124274 5.95 0.0367741 6.21875C-0.0507259 6.4875 0.0211491 6.78125 0.218024 6.98125L3.79302 10.5594L3.00552 15.5562C2.96177 15.8344 3.0774 16.1156 3.30552 16.2812C3.53365 16.4469 3.83365 16.4719 4.08677 16.3438L8.59927 14.05L13.1086 16.3438C13.3586 16.4719 13.6618 16.4469 13.8899 16.2812C14.118 16.1156 14.2336 15.8375 14.1899 15.5562L13.3993 10.5594L16.9743 6.98125C17.1743 6.78125 17.243 6.4875 17.1555 6.21875C17.068 5.95 16.8399 5.75312 16.5586 5.70937L11.5649 4.91563L9.26802 0.409375Z"
+                            fill="#FCC800"
+                          />
+                        </svg>
+                      } @else if (
+                        product().ratingsAverage % 1 >= 0.5 &&
+                        $index === +product().ratingsAverage.toString().split('.')[0]
+                      ) {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="17"
+                          viewBox="0 0 18 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M9.26802 0.409375C9.1399 0.159375 8.88052 0 8.59927 0C8.31802 0 8.05865 0.159375 7.93052 0.409375L5.63052 4.91563L0.633649 5.70937C0.355524 5.75312 0.124274 5.95 0.0367741 6.21875C-0.0507259 6.4875 0.0211491 6.78125 0.218024 6.98125L3.79302 10.5594L3.00552 15.5562C2.96177 15.8344 3.0774 16.1156 3.30552 16.2812C3.53365 16.4469 3.83365 16.4719 4.08677 16.3438L8.59927 14.05L13.1086 16.3438C13.3586 16.4719 13.6618 16.4469 13.8899 16.2812C14.118 16.1156 14.2336 15.8375 14.1899 15.5562L13.3993 10.5594L16.9743 6.98125C17.1743 6.78125 17.243 6.4875 17.1555 6.21875C17.068 5.95 16.8399 5.75312 16.5586 5.70937L11.5649 4.91563L9.26802 0.409375ZM7.84927 3.86875V12.7469L4.72115 14.3375L5.3399 10.4156C5.3774 10.1781 5.29927 9.9375 5.13052 9.76875L2.32427 6.95937L6.24615 6.33437C6.48365 6.29688 6.68677 6.14687 6.79615 5.93437L7.8524 3.86562L7.84927 3.86875ZM9.34927 12.7469V3.86875L10.4055 5.9375C10.5149 6.15 10.718 6.3 10.9555 6.3375L14.8774 6.9625L12.0711 9.77188C11.9024 9.94063 11.8243 10.1812 11.8618 10.4187L12.4805 14.3406L9.3524 12.75L9.34927 12.7469Z"
+                            fill="#FCC800"
+                          />
+                        </svg>
+                      } @else {
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="17"
+                          viewBox="0 0 18 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M8.59669 0C8.87794 0 9.13732 0.159375 9.26544 0.409375L11.5623 4.91563L16.5592 5.70937C16.8373 5.75312 17.0686 5.95 17.1561 6.21875C17.2436 6.4875 17.1717 6.78125 16.9748 6.98125L13.3967 10.5594L14.1873 15.5562C14.2311 15.8344 14.1154 16.1156 13.8873 16.2812C13.6592 16.4469 13.3561 16.4719 13.1061 16.3438L8.59669 14.05L4.08732 16.3438C3.83732 16.4719 3.53419 16.4469 3.30607 16.2812C3.07794 16.1156 2.96232 15.8375 3.00607 15.5562L3.79357 10.5594L0.218568 6.98125C0.0185681 6.78125 -0.0501819 6.4875 0.0373181 6.21875C0.124818 5.95 0.352943 5.75312 0.634193 5.70937L5.63107 4.91563L7.93107 0.409375C8.05919 0.159375 8.31857 0 8.59982 0H8.59669ZM8.59669 2.4L6.79044 5.9375C6.68107 6.15 6.47794 6.3 6.24044 6.3375L2.31857 6.9625L5.12482 9.77188C5.29357 9.94063 5.37169 10.1812 5.33419 10.4187L4.71544 14.3406L8.25607 12.5406C8.46857 12.4312 8.72169 12.4312 8.93732 12.5406L12.4779 14.3406L11.8592 10.4187C11.8217 10.1812 11.8998 9.94063 12.0686 9.77188L14.8748 6.9625L10.9529 6.3375C10.7154 6.3 10.5123 6.15 10.4029 5.9375L8.59669 2.4Z"
+                            fill="#FCC800"
+                          />
+                        </svg>
+                      }
+                    }
+                  </div>
+                  <p class="text-sm text-gray-500 mt-2">
+                    {{ 'UI.BASED_ON_REVIEWS' | translate: { count: product().reviews?.length ?? 0 } }}
+                  </p>
+                </div>
+                <div class="flex-1 w-full">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-sm text-gray-600 w-8">5 star</span>
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                        [style]="'width: ' + reviewsStatus().fiveStar + '%'"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10">{{ reviewsStatus().fiveStar }}%</span>
+                  </div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-sm text-gray-600 w-8">4 star</span>
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                        [style]="'width: ' + reviewsStatus().fourStar + '%'"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10">{{ reviewsStatus().fourStar }}%</span>
+                  </div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-sm text-gray-600 w-8">3 star</span>
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                        [style]="'width: ' + reviewsStatus().threeStar + '%'"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10">{{ reviewsStatus().threeStar }}%</span>
+                  </div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-sm text-gray-600 w-8">2 star</span>
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                        [style]="'width: ' + reviewsStatus().twoStar + '%'"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10">{{ reviewsStatus().twoStar }}%</span>
+                  </div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-sm text-gray-600 w-8">1 star</span>
+                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                        [style]="'width: ' + reviewsStatus().oneStar + '%'"
+                      ></div>
+                    </div>
+                    <span class="text-sm text-gray-500 w-10">{{ reviewsStatus().oneStar }}%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="border-t border-gray-200 pt-6">
+                <div class="text-center py-8">
+                  <section class="w-full pb-5">
+                    <div class="text-center">
+                      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+                        {{ 'UI.CUSTOMER_REVIEWS' | translate }}
+                      </h2>
+                      <p class="text-sm text-gray-500 mt-2">
+                        {{ 'UI.DISCOVER_WHAT_CUSTOMERS_THINK_ABOUT_THIS_PRODUCT' | translate }}
+                      </p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                      <span class="text-sm text-green-700 font-semibold">
+                        {{ 'UI.MOST_HELPFUL' | translate }}
+                      </span>
+                      <h3 class="text-lg font-bold text-gray-900">
+                        {{ 'UI.TOP_REVIEWS' | translate }}
+                      </h3>
+                    </div>
+
+                    <!-- Reviews List -->
+                    @if (reviewsLoading()) {
+                      <div class="flex items-center justify-center gap-3 rounded-xl border border-gray-100 bg-gray-50 py-8 text-sm text-gray-500" aria-live="polite">
+                        <i class="fa-solid fa-spinner animate-spin text-green-600" aria-hidden="true"></i>
+                        {{ 'UI.LOADING_REVIEWS' | translate }}
+                      </div>
+                    }
+                    <div class="flex flex-col gap-4">
+                      @for (
+                        review of product().reviews?.slice(0, visibleCount());
+                        track review._id
+                      ) {
+                        <article
+                          class="group bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 md:p-6 hover:border-green-200 hover:shadow-md hover:shadow-green-900/5 transition-all duration-300"
+                        >
+                          <div class="text-end gap-3 min-w-0">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                              <h4 class="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                                {{ review.user.name }}
+                              </h4>
+                              @if (ownsReview(review)) {
+                                <div class="flex items-center gap-2">
+                                  <button type="button" class="cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold text-green-700 transition hover:bg-green-50"
+                                    (click)="openReviewForm(review)">
+                                    {{ 'UI.EDIT_REVIEW' | translate }}
+                                  </button>
+                                  <button type="button" class="cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                                    [disabled]="deletingReviewId() === review._id" (click)="deleteReview(review)">
+                                    @if (deletingReviewId() === review._id) {
+                                      <i class="fa-solid fa-spinner animate-spin" aria-hidden="true"></i>
+                                    } @else {
+                                      {{ 'UI.DELETE_REVIEW' | translate }}
+                                    }
+                                  </button>
+                                </div>
+                              }
+                            </div>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                              {{ review.createdAt | timeAgoFormat }}
+                            </p>
+                          </div>
+
+                          <!-- Rating -->
+                          <div class="text-end gap-1 mt-4">
+                            @for (star of [1, 2, 3, 4, 5]; track star) {
+                              <i
+                                class="fa-solid fa-star text-sm"
+                                [class.text-yellow-400]="star <= review.rating"
+                                [class.text-gray-200]="star > review.rating"
+                              >
+                              </i>
+                            }
+
+                            <span class="text-xs text-gray-400 ml-2">
+                              {{ review.rating }} / 5
+                            </span>
+                          </div>
+
+                          <!-- Review Content -->
+                          <p class="text-sm text-gray-600 leading-7 mt-3 wrap-break-word">
+                            {{ review.review }}
+                          </p>
+
+                          <!-- Footer -->
+                          <div
+                            class="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-gray-100"
+                          >
+                            <span class="text-xs text-gray-400">
+                              {{ 'UI.WAS_THIS_REVIEW_HELPFUL' | translate }}
+                            </span>
+
+                            <div class="flex items-center gap-4">
+                              <button
+                                type="button"
+                                class="flex cursor-pointer items-center gap-1.5 text-sm text-gray-500 hover:text-green-700 transition-colors"
+                              >
+                                <i class="fa-regular fa-thumbs-up"></i>
+                              </button>
+
+                              <button
+                                type="button"
+                                class="flex cursor-pointer items-center gap-1.5 text-sm text-gray-400 hover:text-red-500 transition-colors"
+                              >
+                                <i class="fa-regular fa-thumbs-down"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      } @empty {
+                        <div
+                          class="flex flex-col items-center justify-center text-center py-14 px-5 bg-gray-50 rounded-2xl border border-gray-200"
+                        >
+                          <svg
+                            data-prefix="fas"
+                            data-icon="star"
+                            width="2rem"
+                            hight="2rem"
+                            class="svg-inline--fa fa-star text-4xl text-gray-300 mb-3 mx-auto"
+                            role="img"
+                            viewBox="0 0 576 512"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M309.5-18.9c-4.1-8-12.4-13.1-21.4-13.1s-17.3 5.1-21.4 13.1L193.1 125.3 33.2 150.7c-8.9 1.4-16.3 7.7-19.1 16.3s-.5 18 5.8 24.4l114.4 114.5-25.2 159.9c-1.4 8.9 2.3 17.9 9.6 23.2s16.9 6.1 25 2L288.1 417.6 432.4 491c8 4.1 17.7 3.3 25-2s11-14.2 9.6-23.2L441.7 305.9 556.1 191.4c6.4-6.4 8.6-15.8 5.8-24.4s-10.1-14.9-19.1-16.3L383 125.3 309.5-18.9z"
+                            ></path>
+                          </svg>
+                          <div
+                            class="size-14 rounded-full bg-green-50 flex items-center justify-center mb-4"
+                          >
+                            <i class="fa-regular fa-comment-dots text-2xl text-green-600"></i>
+                          </div>
+
+                          <h4 class="font-semibold text-gray-900">
+                            {{ 'UI.NO_REVIEWS_YET' | translate }}
+                          </h4>
+
+                          <p class="text-sm text-gray-500 mt-2">
+                            {{
+                              'UI.BE_THE_FIRST_TO_SHARE_YOUR_EXPERIENCE_WITH_THIS_PRODUCT'
+                                | translate
+                            }}
+                          </p>
+                        </div>
+                      }
+                    </div>
+                    @if (visibleCount() < product().reviews?.length!) {
+                      <div class="flex flex-col items-center gap-3 mt-8">
+                        <button
+                          type="button"
+                          (click)="showMoreReviews()"
+                          class="px-7 cursor-pointer py-3 rounded-xl border border-green-600 text-green-700 font-semibold text-sm hover:bg-green-600 hover:text-white active:scale-95 transition-all duration-300"
+                        >
+                          {{ 'UI.VIEW_MORE_REVIEWS' | translate }}
+                          <i class="fa-solid fa-arrow-down ml-2"></i>
+                        </button>
+                      </div>
+                    }
+                  </section>
+
+                  @if (isLoggedIn() && !reviewFormOpen()) {
+                    <button type="button" class="mt-4 cursor-pointer rounded-xl bg-green-600 px-5 py-3 font-semibold text-white transition hover:bg-green-700"
+                      (click)="openReviewForm(getOwnReview())">
+                      {{ (getOwnReview() ? 'UI.EDIT_YOUR_REVIEW' : 'UI.WRITE_A_REVIEW') | translate }}
+                    </button>
+                  }
+
+                  @if (reviewFormOpen()) {
+                    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()"
+                      class="mt-6 rounded-2xl border border-green-100 bg-green-50/50 p-4 sm:p-6">
+                      <h3 class="mb-4 text-base font-semibold text-gray-900">
+                        {{ (editingReviewId() ? 'UI.EDIT_REVIEW' : 'UI.WRITE_A_REVIEW') | translate }}
+                      </h3>
+                      <label for="review-rating" class="mb-2 block text-sm font-medium text-gray-700">
+                        {{ 'UI.YOUR_RATING' | translate }}
+                      </label>
+                      <select id="review-rating" formControlName="rating"
+                        class="mb-4 block w-full max-w-xs cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200">
+                        <option [value]="5">5 — {{ 'UI.EXCELLENT' | translate }}</option>
+                        <option [value]="4">4 — {{ 'UI.VERY_GOOD' | translate }}</option>
+                        <option [value]="3">3 — {{ 'UI.GOOD' | translate }}</option>
+                        <option [value]="2">2 — {{ 'UI.FAIR' | translate }}</option>
+                        <option [value]="1">1 — {{ 'UI.POOR' | translate }}</option>
+                      </select>
+                      <label for="review-text" class="mb-2 block text-sm font-medium text-gray-700">
+                        {{ 'UI.YOUR_REVIEW' | translate }}
+                      </label>
+                      <textarea id="review-text" formControlName="review" rows="4" maxlength="1000"
+                        [placeholder]="'UI.SHARE_YOUR_EXPERIENCE' | translate"
+                        class="block w-full resize-y rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"></textarea>
+                      @if (reviewForm.controls.review.touched && reviewForm.controls.review.invalid) {
+                        <p class="mt-1 text-sm text-red-600">{{ 'UI.REVIEW_REQUIRED' | translate }}</p>
+                      }
+                      <div class="mt-4 flex flex-wrap gap-3">
+                        <button type="submit" [disabled]="savingReview()"
+                          class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-wait disabled:opacity-70">
+                          @if (savingReview()) { <i class="fa-solid fa-spinner animate-spin" aria-hidden="true"></i> }
+                          {{ (editingReviewId() ? 'UI.SAVE_REVIEW' : 'UI.SUBMIT_REVIEW') | translate }}
+                        </button>
+                        <button type="button" [disabled]="savingReview()" (click)="closeReviewForm()"
+                          class="cursor-pointer rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-60">
+                          {{ 'UI.CANCEL' | translate }}
+                        </button>
+                      </div>
+                    </form>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else if (navAndTabsFlag() === 3) {
+          <div class="p-6">
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-linear-to-br from-green-50 to-green-100 rounded-lg p-6">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="h-12 w-12 bg-green-600 text-white rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        data-prefix="fas"
+                        data-icon="truck"
+                        class="svg-inline--fa fa-truck text-xl"
+                        role="img"
+                        width="1.5rem"
+                        hight="1.5rem"
+                        viewBox="0 0 576 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M0 96C0 60.7 28.7 32 64 32l288 0c35.3 0 64 28.7 64 64l0 32 50.7 0c17 0 33.3 6.7 45.3 18.7L557.3 192c12 12 18.7 28.3 18.7 45.3L576 384c0 35.3-28.7 64-64 64l-3.3 0c-10.4 36.9-44.4 64-84.7 64s-74.2-27.1-84.7-64l-102.6 0c-10.4 36.9-44.4 64-84.7 64s-74.2-27.1-84.7-64L64 448c-35.3 0-64-28.7-64-64L0 96zM512 288l0-50.7-45.3-45.3-50.7 0 0 96 96 0zM192 424a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm232 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900">
+                      {{ 'UI.SHIPPING_INFORMATION' | translate }}
+                    </h4>
+                  </div>
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.FREE_SHIPPING_ON_ORDERS_OVER_50' | translate }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.STANDARD_DELIVERY_3_5_BUSINESS_DAYS' | translate }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{
+                        'UI.EXPRESS_DELIVERY_AVAILABLE_1_2_BUSINESS_DAYS' | translate
+                      }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.TRACK_YOUR_ORDER_IN_REAL_TIME' | translate }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="bg-linear-to-br from-green-50 to-green-100 rounded-lg p-6">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="h-12 w-12 bg-green-600 text-white rounded-full flex items-center justify-center"
+                    >
+                      <svg
+                        data-prefix="fas"
+                        data-icon="rotate-left"
+                        width="1.5rem"
+                        hight="1.5rem"
+                        class="svg-inline--fa fa-rotate-left text-xl"
+                        role="img"
+                        viewBox="0 0 512 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M24 192l144 0c9.7 0 18.5-5.8 22.2-14.8s1.7-19.3-5.2-26.2l-46.7-46.7c75.3-58.6 184.3-53.3 253.5 15.9 75 75 75 196.5 0 271.5s-196.5 75-271.5 0c-10.2-10.2-19-21.3-26.4-33-9.5-14.9-29.3-19.3-44.2-9.8s-19.3 29.3-9.8 44.2C49.7 408.7 61.4 423.5 75 437 175 537 337 537 437 437S537 175 437 75C342.8-19.3 193.3-24.7 92.7 58.8L41 7C34.1 .2 23.8-1.9 14.8 1.8S0 14.3 0 24L0 168c0 13.3 10.7 24 24 24z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900">
+                      {{ 'UI.RETURNS_REFUNDS' | translate }}
+                    </h4>
+                  </div>
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.30_DAY_HASSLE_FREE_RETURNS' | translate }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        data-icon="check"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.FULL_REFUND_OR_EXCHANGE_AVAILABLE' | translate }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.FREE_RETURN_SHIPPING_ON_DEFECTIVE_ITEMS' | translate }}</span>
+                    </li>
+                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                      <svg
+                        data-prefix="fas"
+                        width="0.8rem"
+                        hight="0.8rem"
+                        data-icon="check"
+                        class="svg-inline--fa fa-check text-green-600 mt-0.5"
+                        role="img"
+                        viewBox="0 0 448 512"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"
+                        ></path></svg
+                      ><span>{{ 'UI.EASY_ONLINE_RETURN_PROCESS' | translate }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-6 flex items-center gap-4">
+                <div
+                  class="h-14 w-14 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center shrink-0"
+                >
+                  <svg
+                    data-prefix="fas"
+                    data-icon="shield-halved"
+                    width="2rem"
+                    hight="2rem"
+                    class="svg-inline--fa fa-shield-halved text-2xl"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M256 0c4.6 0 9.2 1 13.4 2.9L457.8 82.8c22 9.3 38.4 31 38.3 57.2-.5 99.2-41.3 280.7-213.6 363.2-16.7 8-36.1 8-52.8 0-172.4-82.5-213.1-264-213.6-363.2-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.9 1 251.4 0 256 0zm0 66.8l0 378.1c138-66.8 175.1-214.8 176-303.4l-176-74.6 0 0z"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 mb-1">
+                    {{ 'UI.BUYER_PROTECTION_GUARANTEE' | translate }}
+                  </h4>
+                  <p class="text-sm text-gray-600">
+                    Get a full refund if your order doesn't arrive or isn't as described. We ensure
+                    your shopping experience is safe and secure.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  @if (products().length) {
+    <section class="py-10">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="h-8 w-1.5 bg-linear-to-b from-emerald-500 to-emerald-700 rounded-full"
+            ></div>
+            <h2 class="text-2xl font-bold text-gray-800">
+              {{ 'UI.YOU_MAY_ALSO' | translate }}
+              <span class="text-emerald-600">{{ 'UI.LIKE' | translate }}</span>
+            </h2>
+          </div>
+          <div class="flex space-x-2">
+            <button
+              (click)="moveProductSlider('prev')"
+              class="h-10 w-10 cursor-pointer rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-green-100 hover:text-green-600 transition"
+            >
+              <svg
+                data-prefix="fas"
+                data-icon="chevron-left"
+                class="svg-inline--fa fa-chevron-left"
+                role="img"
+                width="1rem"
+                hight="1rem"
+                viewBox="0 0 320 512"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"
+                ></path></svg
+              ><span class="sr-only">{{ 'UI.PREVIOUS' | translate }}</span>
+            </button>
+            <button
+              (click)="moveProductSlider('next')"
+              class="h-10 cursor-pointer w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-green-100 hover:text-green-600 transition"
+            >
+              <svg
+                data-prefix="fas"
+                data-icon="chevron-right"
+                class="svg-inline--fa fa-chevron-right"
+                role="img"
+                width="1rem"
+                hight="1rem"
+                viewBox="0 0 320 512"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M311.1 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L243.2 256 73.9 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+                ></path></svg
+              ><span class="sr-only">{{ 'UI.NEXT' | translate }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-hidden pt-7">
+          <div #productsSlider class="flex gap-4 transition-all duration-500">
+            @for (product of products(); track product._id) {
+              <div class="shrink-0 w-[calc(20%-15px)]">
+                <app-product-card [product]="product"></app-product-card>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+} @else {
+  <div class="animate-pulse">
+    <!-- Breadcrumb -->
+    <nav class="py-4">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center flex-wrap gap-3">
+          <div class="h-4 w-12 rounded bg-gray-200"></div>
+          <div class="h-3 w-3 rounded bg-gray-200"></div>
+          <div class="h-4 w-20 rounded bg-gray-200"></div>
+          <div class="h-3 w-3 rounded bg-gray-200"></div>
+          <div class="h-4 w-28 rounded bg-gray-200"></div>
+          <div class="h-3 w-3 rounded bg-gray-200"></div>
+          <div class="h-4 w-36 rounded bg-gray-200"></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Product Overview -->
+    <section class="py-6">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Product Images -->
+          <div class="lg:w-1/4">
+            <div class="bg-white rounded-xl shadow-sm p-4">
+              <div class="aspect-square w-full rounded-lg bg-gray-200"></div>
+
+              <!-- Thumbnails -->
+              <div class="flex gap-2 mt-3">
+                @for (item of [1, 2, 3, 4]; track item) {
+                  <div class="aspect-square flex-1 rounded-md bg-gray-200"></div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Information -->
+          <div class="lg:w-3/4">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <!-- Category & Brand -->
+              <div class="flex gap-2 mb-4">
+                <div class="h-7 w-24 rounded-full bg-gray-200"></div>
+                <div class="h-7 w-20 rounded-full bg-gray-200"></div>
+              </div>
+
+              <!-- Title -->
+              <div class="h-8 w-3/4 max-w-lg rounded bg-gray-200 mb-4"></div>
+
+              <!-- Rating -->
+              <div class="flex items-center gap-3 mb-5">
+                <div class="h-4 w-28 rounded bg-gray-200"></div>
+                <div class="h-4 w-32 rounded bg-gray-200"></div>
+              </div>
+
+              <!-- Price -->
+              <div class="h-9 w-36 rounded bg-gray-200 mb-5"></div>
+
+              <!-- Stock -->
+              <div class="h-7 w-28 rounded-full bg-gray-200 mb-6"></div>
+
+              <!-- Description -->
+              <div class="border-t border-gray-100 pt-5 mb-6 space-y-3">
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-2/3 rounded bg-gray-200"></div>
+              </div>
+
+              <!-- Quantity -->
+              <div class="mb-6">
+                <div class="h-4 w-20 rounded bg-gray-200 mb-3"></div>
+                <div class="flex items-center gap-4">
+                  <div class="h-12 w-36 rounded-lg bg-gray-200"></div>
+                  <div class="h-4 w-24 rounded bg-gray-200"></div>
+                </div>
+              </div>
+
+              <!-- Total Price -->
+              <div class="bg-gray-50 rounded-lg p-4 mb-6 flex justify-between items-center">
+                <div class="h-5 w-24 rounded bg-gray-200"></div>
+                <div class="h-7 w-32 rounded bg-gray-200"></div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                <div class="h-14 flex-1 rounded-xl bg-gray-200"></div>
+                <div class="h-14 flex-1 rounded-xl bg-gray-200"></div>
+              </div>
+
+              <!-- Wishlist & Share -->
+              <div class="flex gap-3 mb-6">
+                <div class="h-12 flex-1 rounded-xl bg-gray-200"></div>
+                <div class="h-12 w-14 rounded-xl bg-gray-200"></div>
+              </div>
+
+              <!-- Services -->
+              <div class="border-t border-gray-100 pt-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  @for (item of [1, 2, 3]; track item) {
+                    <div class="flex items-center gap-3">
+                      <div class="size-10 shrink-0 rounded-full bg-gray-200"></div>
+                      <div class="flex-1 space-y-2">
+                        <div class="h-4 w-24 rounded bg-gray-200"></div>
+                        <div class="h-3 w-20 rounded bg-gray-200"></div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Tabs -->
+    <section class="py-8">
+      <div class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <!-- Tabs Header -->
+          <div class="border-b border-gray-200">
+            <div class="flex gap-8 px-6 py-4 overflow-hidden">
+              @for (item of [1, 2, 3]; track item) {
+                <div class="h-6 w-32 shrink-0 rounded bg-gray-200"></div>
+              }
+            </div>
+          </div>
+
+          <!-- Product Details Content -->
+          <div class="p-6 space-y-6">
+            <div class="space-y-3">
+              <div class="h-6 w-44 rounded bg-gray-200"></div>
+              <div class="h-4 w-full rounded bg-gray-200"></div>
+              <div class="h-4 w-3/4 rounded bg-gray-200"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Product Information -->
+              <div class="bg-gray-50 rounded-lg p-4 space-y-5">
+                <div class="h-5 w-40 rounded bg-gray-200"></div>
+
+                @for (item of [1, 2, 3, 4]; track item) {
+                  <div class="flex justify-between gap-4">
+                    <div class="h-4 w-20 rounded bg-gray-200"></div>
+                    <div class="h-4 w-28 rounded bg-gray-200"></div>
+                  </div>
+                }
+              </div>
+
+              <!-- Key Features -->
+              <div class="bg-gray-50 rounded-lg p-4 space-y-5">
+                <div class="h-5 w-32 rounded bg-gray-200"></div>
+
+                @for (item of [1, 2, 3, 4]; track item) {
+                  <div class="flex items-center gap-3">
+                    <div class="size-4 rounded bg-gray-200"></div>
+                    <div class="h-4 w-44 rounded bg-gray-200"></div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- You May Also Like -->
+    <section class="py-10">
+      <div class="container mx-auto px-4">
+        <!-- Section Heading -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center gap-3">
+            <div class="h-8 w-1.5 rounded-full bg-gray-200"></div>
+            <div class="h-7 w-48 rounded bg-gray-200"></div>
+          </div>
+
+          <div class="flex gap-2">
+            <div class="size-10 rounded-full bg-gray-200"></div>
+            <div class="size-10 rounded-full bg-gray-200"></div>
+          </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          @for (item of [1, 2, 3, 4, 5]; track item) {
+            <div class="rounded-xl border border-gray-100 bg-white overflow-hidden">
+              <div class="aspect-square bg-gray-200"></div>
+
+              <div class="p-3 space-y-3">
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-2/3 rounded bg-gray-200"></div>
+                <div class="h-5 w-1/2 rounded bg-gray-200"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Reviews Tab Skeleton -->
+  <div class="p-6 space-y-8 animate-pulse">
+    <!-- Rating Summary -->
+    <div class="flex flex-col md:flex-row gap-8 items-center">
+      <div class="space-y-3 text-center">
+        <div class="h-12 w-24 rounded bg-gray-200 mx-auto"></div>
+        <div class="h-5 w-28 rounded bg-gray-200 mx-auto"></div>
+        <div class="h-4 w-32 rounded bg-gray-200 mx-auto"></div>
+      </div>
+
+      <div class="flex-1 w-full space-y-4">
+        @for (item of [1, 2, 3, 4, 5]; track item) {
+          <div class="flex items-center gap-3">
+            <div class="h-4 w-12 rounded bg-gray-200"></div>
+            <div class="h-2 flex-1 rounded-full bg-gray-200"></div>
+            <div class="h-4 w-10 rounded bg-gray-200"></div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 pt-6 space-y-5">
+      <div class="h-7 w-48 rounded bg-gray-200 mx-auto"></div>
+      <div class="h-4 w-64 rounded bg-gray-200 mx-auto"></div>
+
+      @for (item of [1, 2, 3]; track item) {
+        <div class="border border-gray-100 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="size-12 rounded-full bg-gray-200"></div>
+            <div class="flex-1 space-y-2">
+              <div class="h-4 w-32 rounded bg-gray-200"></div>
+              <div class="h-3 w-24 rounded bg-gray-200"></div>
+            </div>
+          </div>
+
+          <div class="h-4 w-28 rounded bg-gray-200"></div>
+          <div class="h-4 w-full rounded bg-gray-200"></div>
+          <div class="h-4 w-3/4 rounded bg-gray-200"></div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Shipping & Returns Tab Skeleton -->
+  <div class="p-6 space-y-6 animate-pulse">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      @for (item of [1, 2]; track item) {
+        <div class="bg-gray-50 rounded-lg p-6 space-y-5">
+          <div class="flex items-center gap-3">
+            <div class="size-12 rounded-full bg-gray-200"></div>
+            <div class="h-5 w-40 rounded bg-gray-200"></div>
+          </div>
+
+          @for (line of [1, 2, 3, 4]; track line) {
+            <div class="flex items-center gap-3">
+              <div class="size-4 rounded bg-gray-200"></div>
+              <div class="h-4 flex-1 rounded bg-gray-200"></div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="bg-gray-50 rounded-lg p-6 flex items-center gap-4">
+      <div class="size-14 shrink-0 rounded-full bg-gray-200"></div>
+      <div class="flex-1 space-y-3">
+        <div class="h-5 w-48 rounded bg-gray-200"></div>
+        <div class="h-4 w-full rounded bg-gray-200"></div>
+        <div class="h-4 w-3/4 rounded bg-gray-200"></div>
+      </div>
+    </div>
+  </div>
+}

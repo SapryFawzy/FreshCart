@@ -1,3 +1,159 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'flowbite/src/themes/enterprise';
 @import 'tailwindcss';
+@import 'ngx-toastr/toastr';
+@import 'primeicons/primeicons.css';
+@plugin "flowbite/plugin";
+
+@utility container {
+  margin: auto;
+}
+
+@font-face {
+  font-family: 'Exo';
+  src: url('/Fonts/Exo-VariableFont_wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  /* Brand */
+  --color-primary: #0aad0a;
+  --color-secondary: #889397;
+
+  /* Status */
+  --color-success: #198754;
+  --color-danger: #db3030;
+  --color-warning: #ffc107;
+  --color-info: #016bf8;
+
+  /* Surface colors */
+  --color-light: #f0f3f2;
+  --color-dark: #001e2b;
+
+  /* Gray scale */
+  --gray-100: #f0f3f2;
+  --gray-200: #ecf0ef;
+  --gray-300: #dfe2e1;
+  --gray-400: #c1c7c6;
+  --gray-500: #889397;
+  --gray-600: #5c6c75;
+  --gray-700: #3d4f58;
+  --gray-800: #21313c;
+  --gray-900: #001e2b;
+
+  /* Light status backgrounds */
+  --primary-light: #ceefce;
+  --success-light: #d1e7dd;
+  --danger-light: #f8d6d6;
+  --warning-light: #fff3cd;
+  --info-light: #cce1fe;
+
+  /* Dark status backgrounds */
+  --primary-dark: #044504;
+  --success-dark: #0a3622;
+  --danger-dark: #581313;
+  --warning-dark: #664d03;
+  --info-dark: #002b63;
+}
+
+@theme {
+  --animate-fade-in-up: fade-in-up 3s ease-in-out infinite;
+
+  @keyframes fade-in-up {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+@theme {
+  --animate-card-enter: card-enter 2s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateX(50%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+body {
+  font-family: 'Exo', sans-serif;
+  color: var(--gray-800);
+  background: var(--app-background, #fff);
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+:root {
+  --app-background: #ffffff;
+  --app-surface: #ffffff;
+  --app-text: #21313c;
+  --app-border: #e5e7eb;
+}
+
+:root.app-dark {
+  color-scheme: dark;
+  --app-background: #101916;
+  --app-surface: #19231f;
+  --app-text: #e5eee9;
+  --app-border: #34423b;
+  --gray-100: #202c26;
+  --gray-200: #2a3831;
+  --gray-300: #34423b;
+  --gray-400: #617068;
+  --gray-500: #9ba9a1;
+  --gray-600: #bdc9c2;
+  --gray-700: #d2ddd6;
+  --gray-800: #e5eee9;
+  --gray-900: #f4f8f5;
+}
+
+.categories-menu {
+  background: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+  min-width: 220px;
+}
+
+.categories-menu .p-menu-item-link {
+  padding: 12px 16px;
+}
+
+.categories-menu .p-menu-item-content {
+  color: #000;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.categories-menu .p-menu-item-content:hover {
+  background-color: #00d33f !important;
+}
+
+.categories-menu .p-menu-item-content {
+  color: #000;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.sign-out-item .p-menu-item-content {
+  color: #c52222;
+}
+
+.sign-out-item .p-menu-item-content:hover {
+  background-color: #ff8383;
+  color: #ff0000 !important;
+}

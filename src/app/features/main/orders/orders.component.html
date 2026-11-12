@@ -1,0 +1,297 @@
+<main class="orders-page mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+  <nav class="mb-5 flex items-center gap-2 text-xs text-gray-500" [aria-label]="'UI.BREADCRUMB' | translate">
+    <a routerLink="/home" class="hover:text-green-700">{{ 'UI.HOME' | translate }}</a>
+    <span>/</span><span class="font-medium text-gray-800">{{ 'UI.MY_ORDERS' | translate }}</span>
+  </nav>
+
+  <header class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex items-center gap-3">
+      <span
+        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-600 text-white shadow-lg shadow-green-600/20"
+        aria-hidden="true"
+      >
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Zm0 0 8 4.5 8-4.5M12 12v9M8 5.3l8 4.6" />
+        </svg>
+      </span>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900">{{ 'UI.MY_ORDERS' | translate }}</h1>
+        <p class="text-sm text-gray-500">
+          {{ 'UI.TRACK_MANAGE_ORDERS' | translate }} {{ orders().length }}
+          {{ (orders().length === 1 ? 'UI.ORDER_SINGULAR' : 'UI.ORDER_PLURAL') | translate }}
+        </p>
+      </div>
+    </div>
+    <a
+      routerLink="/shop"
+      class="inline-flex items-center gap-2 self-start rounded-lg px-3 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-50 sm:self-auto"
+    >
+      <svg class="icon icon-sm" viewBox="0 0 24 24">
+        <path d="M6 8h12l1 12H5L6 8Zm3 0V6a3 3 0 0 1 6 0v2" />
+      </svg>
+      {{ 'UI.CONTINUE_SHOPPING' | translate }}
+    </a>
+  </header>
+
+  <section class="space-y-4" [attr.aria-label]="'UI.YOUR_ORDERS_ARIA' | translate">
+    @for (order of orders(); track orderId(order)) {
+      <article
+        class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:border-gray-300 hover:shadow-md"
+      >
+        <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
+          <div
+            class="order-image flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-2 sm:h-24 sm:w-24"
+          >
+            @if (firstImage(order); as imageUrl) {
+              <img
+                [src]="imageUrl"
+                [alt]="items(order)[0]?.product?.title || ('UI.FIRST_ITEM_IN_ORDER' | translate)"
+                class="h-full w-full object-contain"
+                loading="lazy"
+              />
+            } @else {
+              <svg
+                class="h-8 w-8 text-gray-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path d="m4 7 8-4 8 4v10l-8 4-8-4V7Zm0 0 8 4 8-4m-8 4v10" />
+              </svg>
+            }
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <span
+                  class="mb-1.5 inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-semibold"
+                  [class.bg-green-50]="order.isDelivered"
+                  [class.text-green-700]="order.isDelivered"
+                  [class.bg-amber-50]="!order.isDelivered"
+                  [class.text-amber-700]="!order.isDelivered"
+                >
+                  <span
+                    class="h-1.5 w-1.5 rounded-full"
+                    [class.bg-green-500]="order.isDelivered"
+                    [class.bg-amber-500]="!order.isDelivered"
+                  ></span>
+                  {{ (order.isDelivered ? 'UI.DELIVERED' : 'UI.PROCESSING') | translate }}
+                </span>
+                <h2
+                  class="flex items-center gap-1.5 truncate text-sm font-bold text-gray-900 sm:text-base"
+                >
+                  <svg class="icon icon-xs text-gray-400" viewBox="0 0 24 24">
+                    <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+                  </svg>
+                  Order #{{ orderNumber(order) }}
+                </h2>
+              </div>
+              <span
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600"
+                [attr.title]="
+                  order.paymentMethodType === 'card' ? ('UI.CREDIT_CARD' | translate) : ('UI.CASH_ON_DELIVERY' | translate)
+                "
+              >
+                @if (order.paymentMethodType === 'card') {
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="M3 10h18M7 15h3" />
+                  </svg>
+                } @else {
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M6 8h.01M18 16h.01" />
+                  </svg>
+                }
+              </span>
+            </div>
+
+            <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-gray-500">
+              <span class="inline-flex items-center gap-1.5"
+                ><svg class="icon icon-xs" viewBox="0 0 24 24">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M16 3v4M8 3v4M3 10h18" /></svg
+                >{{
+                  order.createdAt ? (order.createdAt | date: 'MMM d, y') : 'Date unavailable'
+                }}</span
+              >
+              <span class="hidden h-1 w-1 rounded-full bg-gray-300 sm:block"></span>
+              <span class="inline-flex items-center gap-1.5"
+                ><svg class="icon icon-xs" viewBox="0 0 24 24">
+                  <path d="m4 7 8-4 8 4v10l-8 4-8-4V7Zm0 0 8 4 8-4m-8 4v10" /></svg
+                >{{ itemCount(order) }} {{ itemCount(order) === 1 ? ('UI.ITEM' | translate) : ('UI.ITEMS' | translate) }}</span
+              >
+              @if (order.shippingAddress.city) {
+                <span class="hidden h-1 w-1 rounded-full bg-gray-300 sm:block"></span>
+                <span class="inline-flex items-center gap-1.5"
+                  ><svg class="icon icon-xs" viewBox="0 0 24 24">
+                    <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+                    <circle cx="12" cy="10" r="2.5" /></svg
+                  >{{ order.shippingAddress.city }}</span
+                >
+              }
+            </div>
+
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <div class="text-lg font-bold leading-none text-gray-900">
+                {{ order.totalOrderPrice | currency: 'EGP' : 'symbol' : '1.0-2' }}
+              </div>
+              <button
+                type="button"
+                class="inline-flex min-h-9 items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                [attr.aria-expanded]="isExpanded(order)"
+                [attr.aria-controls]="'order-details-' + orderId(order)"
+                (click)="toggleDetails(order)"
+              >
+                {{ (isExpanded(order) ? 'UI.HIDE' : 'UI.DETAILS') | translate }}
+                <svg
+                  class="icon icon-xs transition-transform"
+                  [class.rotate-180]="isExpanded(order)"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @if (isExpanded(order)) {
+          <div
+            [id]="'order-details-' + orderId(order)"
+            class="border-t border-gray-100 bg-gray-50/60 p-4 sm:p-5"
+          >
+            <h3
+              class="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-gray-700"
+            >
+              <span
+                class="flex h-5 w-5 items-center justify-center rounded bg-green-100 text-green-700"
+                ><svg class="icon icon-xs" viewBox="0 0 24 24">
+                  <path d="m4 7 8-4 8 4v10l-8 4-8-4V7Zm0 0 8 4 8-4m-8 4v10" /></svg></span
+              >{{ 'UI.ORDER_ITEMS' | translate }}
+            </h3>
+            <div class="space-y-2">
+              @for (item of items(order); track item._id || item.product?._id || $index) {
+                <div class="flex items-center gap-3 rounded-lg bg-white p-2.5">
+                  <div
+                    class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-100 bg-gray-50 p-1"
+                  >
+                    @if (item.product.imageCover) {
+                      <img
+                        [src]="item.product.imageCover"
+                        [alt]="item.product.title || ('UI.PRODUCT_FALLBACK' | translate)"
+                        class="h-full w-full object-contain"
+                        loading="lazy"
+                      />
+                    }
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-xs font-medium text-gray-800">
+                      {{ item.product.title || 'Product' }}
+                    </p>
+                    <p class="mt-0.5 text-[11px] text-gray-500">{{ 'UI.QTY' | translate }} {{ item.count || 1 }}</p>
+                  </div>
+                  <span class="shrink-0 text-xs font-semibold text-gray-800">{{
+                    item.price  * (item.count || 1) | currency: 'EGP' : 'symbol' : '1.0-2'
+                  }}</span>
+                </div>
+              } @empty {
+                <p class="rounded-lg bg-white p-3 text-xs text-gray-500">
+                  Item details are unavailable for this order.
+                </p>
+              }
+            </div>
+            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+              <section class="rounded-lg border border-gray-100 bg-white p-3">
+                <h4 class="mb-2 flex items-center gap-1.5 text-xs font-bold text-gray-800">
+                  <svg class="icon icon-xs text-green-600" viewBox="0 0 24 24">
+                    <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+                    <circle cx="12" cy="10" r="2.5" /></svg
+                  >{{ 'UI.DELIVERY_ADDRESS' | translate }}
+                </h4>
+                <p class="text-xs font-medium text-gray-700">
+                  {{ order.shippingAddress.city || ('UI.ADDRESS_UNAVAILABLE' | translate) }}
+                </p>
+                @if (order.shippingAddress.details) {
+                  <p class="mt-1 text-[11px] text-gray-500">{{ order.shippingAddress.details }}</p>
+                }
+                @if (order.shippingAddress.phone) {
+                  <p class="mt-1 text-[11px] text-gray-500">{{ order.shippingAddress.phone }}</p>
+                }
+              </section>
+              <section class="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                <h4 class="mb-2 flex items-center gap-1.5 text-xs font-bold text-gray-800">
+                  <svg class="icon icon-xs text-amber-600" viewBox="0 0 24 24">
+                    <path
+                      d="M12 3v18M17 7.5c0-1.7-2-2.5-5-2.5S7 6 7 7.5 9 10 12 10s5 1.2 5 2.5S15 15 12 15s-5-.8-5-2.5"
+                    /></svg
+                  >{{ 'UI.ORDER_SUMMARY' | translate }}
+                </h4>
+                <div class="space-y-1.5 text-[11px] text-gray-600">
+                  <div class="flex justify-between gap-3">
+                    <span>{{ 'UI.SUBTOTAL' | translate }}</span
+                    ><span>{{
+                      order.totalOrderPrice -
+                        order.shippingPrice -
+                        order.taxPrice | currency: 'EGP' : 'symbol' : '1.0-2'
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between gap-3">
+                    <span>{{ 'UI.SHIPPING' | translate }}</span
+                    ><span
+                      [class.text-green-700]="shippingIsFree(order)"
+                      [class.font-semibold]="shippingIsFree(order)"
+                      >{{
+                        shippingIsFree(order)
+                          ? ('UI.FREE' | translate)
+                          : (order.shippingPrice | currency: 'EGP' : 'symbol' : '1.0-2')
+                      }}</span
+                    >
+                  </div>
+                  <div class="flex justify-between gap-3">
+                    <span>{{ 'UI.PAYMENT' | translate }}</span
+                    ><span>{{
+                      order.paymentMethodType === 'card' ? ('UI.CREDIT_CARD' | translate) : ('UI.CASH_ON_DELIVERY' | translate)
+                    }}</span>
+                  </div>
+                  <div
+                    class="flex justify-between gap-3 border-t border-amber-200 pt-1.5 font-bold text-gray-900"
+                  >
+                    <span>{{ 'UI.TOTAL' | translate }}</span
+                    ><span>{{
+                      order.totalOrderPrice | currency: 'EGP' : 'symbol' : '1.0-2'
+                    }}</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        }
+      </article>
+    } @empty {
+      <div class="rounded-xl border border-gray-200 bg-white px-5 py-14 text-center">
+        <span
+          class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-400"
+          ><svg
+            class="h-7 w-7"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="m4 7 8-4 8 4v10l-8 4-8-4V7Zm0 0 8 4 8-4m-8 4v10" /></svg
+        ></span>
+        <h2 class="text-lg font-bold text-gray-900">{{ 'UI.NO_ORDERS_YET' | translate }}</h2>
+        <p class="mt-1 text-sm text-gray-500">{{ 'UI.BROWSE_PRODUCTS_AND_YOUR_ORDERS_WILL_APPEAR_HERE' | translate }}</p>
+        <a
+          routerLink="/shop"
+          class="mt-5 inline-flex items-center justify-center rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700"
+          >{{ 'UI.BROWSE_PRODUCTS' | translate }}</a
+        >
+      </div>
+    }
+  </section>
+</main>

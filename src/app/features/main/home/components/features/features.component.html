@@ -1,0 +1,88 @@
+<section #feature class="py-10">
+  <div class="container mx-auto">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div
+        appScrollReveal
+        class="relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 p-8 text-white"
+      >
+        <div
+          class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"
+        ></div>
+        <div class="relative z-10">
+          <div
+            class="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-sm mb-4"
+          >
+            <span>🔥</span><span>{{ 'UI.DEAL_OF_THE_DAY' | translate }}</span>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold mb-2">{{ 'UI.FRESH_ORGANIC_FRUITS' | translate }}</h3>
+          <p class="text-white/80 mb-4">{{ 'UI.GET_UP_TO_40_OFF_ON_SELECTED_ORGANIC_FRUITS' | translate }}</p>
+          <div class="flex items-center gap-4 mb-6">
+            <div class="text-3xl font-bold">40% OFF</div>
+            <div class="text-sm text-white/70">
+              {{ 'UI.USE_CODE' | translate }} <span class="font-bold text-white">ORGANIC40</span>
+            </div>
+          </div>
+          <a
+            class="inline-flex items-center gap-2 bg-white text-emerald-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+            routerLink="/shop"
+            >{{ 'UI.SHOP_NOW' | translate }}<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="12"
+              viewBox="0 0 16 12"
+              fill="none"
+            >
+              <path
+                d="M15.7063 6.70859C16.0969 6.31797 16.0969 5.68359 15.7063 5.29297L10.7063 0.292969C10.3156 -0.0976562 9.68125 -0.0976562 9.29062 0.292969C8.9 0.683594 8.9 1.31797 9.29062 1.70859L12.5844 5.00234H1C0.446875 5.00234 0 5.44922 0 6.00234C0 6.55547 0.446875 7.00234 1 7.00234H12.5844L9.29062 10.2961C8.9 10.6867 8.9 11.3211 9.29062 11.7117C9.68125 12.1023 10.3156 12.1023 10.7063 11.7117L15.7063 6.71172V6.70859Z"
+                fill="#009966"
+              /></svg
+          ></a>
+        </div>
+      </div>
+      <div
+        appScrollReveal
+        class="relative overflow-hidden rounded-2xl bg-linear-to-br from-orange-400 to-rose-500 p-8 text-white"
+      >
+        <div
+          class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"
+        ></div>
+        <div class="relative z-10">
+          <div
+            class="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-sm mb-4"
+          >
+            <span>✨</span><span>{{ 'UI.NEW_ARRIVALS' | translate }}</span>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold mb-2">{{ 'UI.EXOTIC_VEGETABLES' | translate }}</h3>
+          <p class="text-white/80 mb-4">{{ 'UI.DISCOVER_OUR_LATEST_COLLECTION_OF_PREMIUM_VEGETABLES' | translate }}</p>
+          <div class="flex items-center gap-4 mb-6">
+            <div class="text-3xl font-bold">25% OFF</div>
+            <div class="text-sm text-white/70">
+              {{ 'UI.USE_CODE' | translate }} <span class="font-bold text-white">FRESH25</span>
+            </div>
+          </div>
+          <a
+            class="inline-flex items-center gap-2 bg-white text-orange-500 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+            routerLink="/shop"
+            >{{ 'UI.EXPLORE_NOW' | translate }}<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="12"
+              viewBox="0 0 16 12"
+              fill="none"
+            >
+              <path
+                d="M15.7063 6.70859C16.0969 6.31797 16.0969 5.68359 15.7063 5.29297L10.7063 0.292969C10.3156 -0.0976562 9.68125 -0.0976562 9.29062 0.292969C8.9 0.683594 8.9 1.31797 9.29062 1.70859L12.5844 5.00234H1C0.446875 5.00234 0 5.44922 0 6.00234C0 6.55547 0.446875 7.00234 1 7.00234H12.5844L9.29062 10.2961C8.9 10.6867 8.9 11.3211 9.29062 11.7117C9.68125 12.1023 10.3156 12.1023 10.7063 11.7117L15.7063 6.71172V6.70859Z"
+                fill="#FF6900"
+              /></svg
+          ></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

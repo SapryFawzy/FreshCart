@@ -1,0 +1,182 @@
+<main class="search-page">
+  <header class="search-header">
+    <p class="breadcrumbs">
+      <span
+        routerLink="/home"
+        class="hover:text-green-600! duration-300 transition-all cursor-pointer"
+        >{{ 'UI.HOME' | translate }}</span
+      >
+      <span>/</span> {{ 'UI.SEARCH_PAGE.BREADCRUMB' | translate }}
+    </p>
+    <form class="search-box" (submit)="$event.preventDefault(); updateSearch()">
+      <span aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        [value]="query()"
+        (input)="query.set($any($event.target).value); updateSearch()"
+        [placeholder]="'UI.SEARCH_PAGE.SEARCH_PLACEHOLDER' | translate"
+        [attr.aria-label]="'UI.SEARCH_PAGE.SEARCH_PLACEHOLDER' | translate"
+      />
+    </form>
+  </header>
+
+  <div class="search-layout">
+    <aside class="filters" aria-label="Product filters">
+      <div class="filter-heading">
+        <h2>{{ 'UI.SEARCH_PAGE.FILTERS' | translate }}</h2>
+        <button type="button" class="clear-button" (click)="clearFilters()">
+          {{ 'UI.SEARCH_PAGE.CLEAR_ALL' | translate }}
+        </button>
+      </div>
+
+      <section class="filter-section scrollable-section">
+        <h3>{{ 'UI.SEARCH_PAGE.CATEGORIES' | translate }}</h3>
+        @for (category of categories(); track category._id) {
+          <label class="filter-option">
+            <input
+              type="checkbox"
+              [checked]="selectedCategories().includes(category._id)"
+              (change)="toggleFilter('category', category._id, $any($event.target).checked)"
+            />
+            <span>{{ category.name }}</span>
+          </label>
+        }
+      </section>
+
+      <section class="filter-section scrollable-section">
+        <h3>{{ 'UI.SEARCH_PAGE.SUBCATEGORIES' | translate }}</h3>
+        @for (subcategory of subcategories(); track subcategory._id) {
+          <label class="filter-option">
+            <input
+              type="checkbox"
+              [checked]="selectedSubcategories().includes(subcategory._id)"
+              (change)="toggleFilter('subcategory', subcategory._id, $any($event.target).checked)"
+            />
+            <span>{{ subcategory.name }}</span>
+          </label>
+        }
+      </section>
+
+      <section class="filter-section price-section">
+        <h3>{{ 'UI.SEARCH_PAGE.PRICE_RANGE' | translate }}</h3>
+        <div class="price-inputs">
+          <label
+            >{{ 'UI.SEARCH_PAGE.MIN_PRICE' | translate
+            }}<input
+              type="number"
+              min="0"
+              [value]="minPrice() ?? ''"
+              (change)="setPrice('minPrice', $any($event.target).value)"
+              [placeholder]="'UI.SEARCH_PAGE.NO_LIMIT' | translate"
+          /></label>
+          <label
+            >{{ 'UI.SEARCH_PAGE.MAX_PRICE' | translate
+            }}<input
+              type="number"
+              min="0"
+              [value]="maxPrice() ?? ''"
+              (change)="setPrice('maxPrice', $any($event.target).value)"
+              [placeholder]="'UI.SEARCH_PAGE.NO_LIMIT' | translate"
+          /></label>
+        </div>
+        <div class="price-presets">
+          <button type="button" (click)="setPriceRange(null, 500)">
+            {{ 'UI.SEARCH_PAGE.UNDER_500' | translate }}
+          </button>
+          <button type="button" (click)="setPriceRange(500, 1000)">
+            {{ 'UI.SEARCH_PAGE.RANGE_500_1000' | translate }}
+          </button>
+          <button type="button" (click)="setPriceRange(1000, 2000)">
+            {{ 'UI.SEARCH_PAGE.RANGE_1000_2000' | translate }}
+          </button>
+        </div>
+      </section>
+
+      <section class="filter-section scrollable-section">
+        <h3>{{ 'UI.SEARCH_PAGE.BRANDS' | translate }}</h3>
+        @for (brand of brands(); track brand._id) {
+          <label class="filter-option">
+            <input
+              type="checkbox"
+              [checked]="selectedBrands().includes(brand._id)"
+              (change)="toggleFilter('brand', brand._id, $any($event.target).checked)"
+            />
+            <span>{{ brand.name }}</span>
+          </label>
+        }
+      </section>
+    </aside>
+
+    <section class="results" aria-live="polite">
+      <div class="results-heading">
+        <div>
+          <h1>{{ 'UI.SEARCH_PAGE.BREADCRUMB' | translate }}</h1>
+          <p>{{ resultCount() }} {{ 'UI.SEARCH_PAGE.PRODUCTS_FOUND' | translate }}</p>
+        </div>
+        <div class="results-tools">
+          <label class="sort-control"
+            ><span>{{ 'UI.SEARCH_PAGE.SORT_BY' | translate }}</span>
+            <select
+              [value]="sort()"
+              (change)="setSort($any($event.target).value)"
+              aria-label="Sort products"
+            >
+              <option value="">{{ 'UI.SEARCH_PAGE.RELEVANCE' | translate }}</option>
+              <option value="price">{{ 'UI.SEARCH_PAGE.PRICE_LOW_HIGH' | translate }}</option>
+              <option value="-price">{{ 'UI.SEARCH_PAGE.PRICE_HIGH_LOW' | translate }}</option>
+              <option value="-ratingsAverage">{{ 'UI.SEARCH_PAGE.TOP_RATED' | translate }}</option>
+              <option value="title">{{ 'UI.SEARCH_PAGE.NAME_A_Z' | translate }}</option>
+              <option value="-title">{{ 'UI.SEARCH_PAGE.NAME_Z_A' | translate }}</option>
+            </select>
+          </label>
+          <div class="view-switch" role="group" aria-label="Product view">
+            <button
+              type="button"
+              [attr.aria-label]="'UI.SEARCH_PAGE.GRID_VIEW' | translate"
+              [title]="'UI.SEARCH_PAGE.GRID_VIEW' | translate"
+              [class.selected]="viewMode() === 'grid'"
+              [attr.aria-pressed]="viewMode() === 'grid'"
+              (click)="viewMode.set('grid')"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="1" y="1" width="5.5" height="5.5" rx="1" />
+                <rect x="9.5" y="1" width="5.5" height="5.5" rx="1" />
+                <rect x="1" y="9.5" width="5.5" height="5.5" rx="1" />
+                <rect x="9.5" y="9.5" width="5.5" height="5.5" rx="1" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              [attr.aria-label]="'UI.SEARCH_PAGE.LIST_VIEW' | translate"
+              [title]="'UI.SEARCH_PAGE.LIST_VIEW' | translate"
+              [class.selected]="viewMode() === 'list'"
+              [attr.aria-pressed]="viewMode() === 'list'"
+              (click)="viewMode.set('list')"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M1 2h2v2H1zM5 2h10v2H5zM1 7h2v2H1zM5 7h10v2H5zM1 12h2v2H1zM5 12h10v2H5z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="state-message loading-state">
+          <span class="spinner" aria-hidden="true"></span
+          ><span>{{ 'UI.SEARCH_PAGE.LOADING' | translate }}</span>
+        </div>
+      } @else if (error()) {
+        <div class="state-message error-message">{{ 'UI.SEARCH_PAGE.LOAD_ERROR' | translate }}</div>
+      } @else if (products().length) {
+        <div class="product-grid" [class.list-view]="viewMode() === 'list'">
+          @for (product of products(); track product._id) {
+            <app-product-card [product]="product"></app-product-card>
+          }
+        </div>
+      } @else {
+        <div class="state-message">{{ 'UI.SEARCH_PAGE.NO_MATCHES' | translate }}</div>
+      }
+    </section>
+  </div>
+</main>

@@ -1,0 +1,352 @@
+<section #newsletter class="bg-[#F0FDF4] border-y border-[#DCFCE7]">
+  @defer (on viewport(newsletter)) {
+    <div class="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+      <div
+        class="overflow-hidden rounded-[30px] border border-emerald-100 bg-linear-to-br from-white via-white to-rose-50 shadow-[0_15px_50px_rgba(16,185,129,0.08)]"
+      >
+        <div class="p-6 sm:p-10 lg:p-12">
+          <!-- Main content -->
+          <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1.65fr_1fr] lg:gap-12">
+            <!-- Newsletter -->
+            <section
+              class="flex flex-col justify-center lg:border-r lg:border-emerald-100 lg:pr-12"
+            >
+              <div class="mb-7 flex items-center gap-4">
+                <div
+                  class="flex size-14 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="15"
+                    viewBox="0 0 20 15"
+                    fill="none"
+                  >
+                    <path
+                      d="M1.875 0C0.839844 0 0 0.839844 0 1.875C0 2.46484 0.277344 3.01953 0.75 3.375L8.875 9.46875C9.54297 9.96875 10.457 9.96875 11.125 9.46875L19.25 3.375C19.7227 3.01953 20 2.46484 20 1.875C20 0.839844 19.1602 0 18.125 0H1.875ZM0 5.15625V12.5C0 13.8789 1.12109 15 2.5 15H17.5C18.8789 15 20 13.8789 20 12.5V5.15625L12.25 10.9688C10.918 11.9688 9.08203 11.9688 7.75 10.9688L0 5.15625Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
+
+                <div>
+                  <p class="text-sm font-semibold text-emerald-600">{{ 'UI.NEWSLETTER' | translate }}</p>
+                  <p class="text-xs text-gray-500">{{ 'UI.50_000_SUBSCRIBERS' | translate }}</p>
+                </div>
+              </div>
+
+              <h2
+                class="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl"
+              >
+                {{ 'UI.GET_THE_FRESHEST_UPDATES' | translate }}
+                <span class="block text-emerald-600">{{ 'UI.DELIVERED_FREE' | translate }}</span>
+              </h2>
+
+              <p class="mt-5 text-base leading-relaxed text-slate-500">
+                Weekly recipes, seasonal offers & exclusive member perks.
+              </p>
+
+              <!-- Benefits -->
+              <div class="mt-6 flex flex-wrap gap-3">
+                <div
+                  class="flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-2.5 shadow-sm"
+                >
+                  <span
+                    class="flex size-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                    >
+                      <path
+                        d="M11.0461 0.157063C11.1961 0.0140938 11.4141 -0.0374687 11.6156 0.0281563C11.8453 0.1055 12 0.321125 12 0.562531V4.943C12 8.018 9.46641 10.5 6.40313 10.5C4.59844 10.5 3.04219 9.33988 2.47734 7.718C1.64766 8.43987 1.125 9.50159 1.125 10.6875C1.125 10.9993 0.874219 11.25 0.5625 11.25C0.250781 11.25 0 10.9993 0 10.6875C0 8.93206 0.895312 7.38519 2.25234 6.47581C3.07969 5.92269 4.06641 5.62503 5.0625 5.62503H6.9375C7.24922 5.62503 7.5 5.37425 7.5 5.06253C7.5 4.75081 7.24922 4.50003 6.9375 4.50003H5.0625C4.13203 4.50003 3.25078 4.70628 2.46094 5.07425C3.00703 3.43363 4.55156 2.25003 6.375 2.25003C7.93125 2.25003 9.08906 1.73206 9.86016 1.21878C10.3102 0.918781 10.6922 0.560188 11.0484 0.157063H11.0461Z"
+                        fill="#009966"
+                      />
+                    </svg>
+                  </span>
+                  <span class="text-sm font-medium text-slate-700"> {{ 'UI.FRESH_PICKS_WEEKLY' | translate }} </span>
+                </div>
+
+                <div
+                  class="flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-2.5 shadow-sm"
+                >
+                  <span
+                    class="flex size-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="12"
+                      viewBox="0 0 14 12"
+                      fill="none"
+                    >
+                      <path
+                        d="M0 1.5C0 0.672656 0.672656 0 1.5 0H8.25C9.07734 0 9.75 0.672656 9.75 1.5V2.25H10.9383C11.3367 2.25 11.7188 2.40703 12 2.68828L13.0617 3.75C13.343 4.03125 13.5 4.41328 13.5 4.81172V8.25C13.5 9.07734 12.8273 9.75 12 9.75H11.9227C11.6789 10.6148 10.882 11.25 9.9375 11.25C8.99297 11.25 8.19844 10.6148 7.95234 9.75H5.54766C5.30391 10.6148 4.50703 11.25 3.5625 11.25C2.61797 11.25 1.82344 10.6148 1.57734 9.75H1.5C0.672656 9.75 0 9.07734 0 8.25V1.5ZM12 6V4.81172L10.9383 3.75H9.75V6H12ZM4.5 9.1875C4.5 8.93886 4.40123 8.7004 4.22541 8.52459C4.0496 8.34877 3.81114 8.25 3.5625 8.25C3.31386 8.25 3.0754 8.34877 2.89959 8.52459C2.72377 8.7004 2.625 8.93886 2.625 9.1875C2.625 9.43614 2.72377 9.6746 2.89959 9.85041C3.0754 10.0262 3.31386 10.125 3.5625 10.125C3.81114 10.125 4.0496 10.0262 4.22541 9.85041C4.40123 9.6746 4.5 9.43614 4.5 9.1875ZM9.9375 10.125C10.1861 10.125 10.4246 10.0262 10.6004 9.85041C10.7762 9.6746 10.875 9.43614 10.875 9.1875C10.875 8.93886 10.7762 8.7004 10.6004 8.52459C10.4246 8.34877 10.1861 8.25 9.9375 8.25C9.68886 8.25 9.4504 8.34877 9.27459 8.52459C9.09877 8.7004 9 8.93886 9 9.1875C9 9.43614 9.09877 9.6746 9.27459 9.85041C9.4504 10.0262 9.68886 10.125 9.9375 10.125Z"
+                        fill="#009966"
+                      />
+                    </svg>
+                  </span>
+                  <span class="text-sm font-medium text-slate-700"> {{ 'UI.FREE_DELIVERY_CODES' | translate }} </span>
+                </div>
+
+                <div
+                  class="flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-2.5 shadow-sm"
+                >
+                  <span
+                    class="flex size-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="11"
+                      viewBox="0 0 11 11"
+                      fill="none"
+                    >
+                      <path
+                        d="M0 1.5V5.00391C0 5.40234 0.157031 5.78437 0.438281 6.06562L4.93828 10.5656C5.52422 11.1516 6.47344 11.1516 7.05938 10.5656L10.5633 7.06172C11.1492 6.47578 11.1492 5.52656 10.5633 4.94062L6.06328 0.440625C5.78203 0.157031 5.40234 0 5.00391 0H1.5C0.672656 0 0 0.672656 0 1.5ZM2.625 1.875C2.82391 1.875 3.01468 1.95402 3.15533 2.09467C3.29598 2.23532 3.375 2.42609 3.375 2.625C3.375 2.82391 3.29598 3.01468 3.15533 3.15533C3.01468 3.29598 2.82391 3.375 2.625 3.375C2.42609 3.375 2.23532 3.29598 2.09467 3.15533C1.95402 3.01468 1.875 2.82391 1.875 2.625C1.875 2.42609 1.95402 2.23532 2.09467 2.09467C2.23532 1.95402 2.42609 1.875 2.625 1.875Z"
+                        fill="#009966"
+                      />
+                    </svg>
+                  </span>
+                  <span class="text-sm font-medium text-slate-700"> {{ 'UI.MEMBERS_ONLY_DEALS' | translate }} </span>
+                </div>
+              </div>
+
+              <!-- Subscribe form -->
+              <form
+                [formGroup]="newsLetterSubscribtion"
+                class="mt-8 flex flex-col gap-3 sm:flex-row"
+                (ngSubmit)="subscribe()"
+              >
+                <input
+                  type="email"
+                  name="email"
+                  formControlName="email"
+                  required
+                  email
+                  [placeholder]="'UI.EMAIL_EXAMPLE' | translate"
+                  [aria-label]="'UI.YOUR_EMAIL_ADDRESS' | translate"
+                  class="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm text-slate-800 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                />
+
+                <button
+                  type="submit"
+                  class="cursor-pointer flex items-center justify-center gap-3 rounded-xl bg-emerald-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-600 active:scale-[0.98]"
+                >
+                  Subscribe
+                  <i class="pi pi-arrow-right"></i>
+                </button>
+              </form>
+
+              @if (message()) {
+                <p class="mt-3 text-sm text-emerald-600" role="status">
+                  {{ message() | translate }}
+                </p>
+              } @else {
+                <p class="mt-4 text-xs text-gray-400">✨ Unsubscribe anytime. No spam, ever.</p>
+              }
+            </section>
+
+            <!-- Mobile App Card -->
+            <section class="flex items-center justify-center">
+              <div
+                class="w-full max-w-105 rounded-[25px] bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-7 text-white shadow-xl sm:p-9"
+              >
+                <span
+                  class="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-400"
+                >
+                  📱 MOBILE APP
+                </span>
+
+                <h3 class="mt-7 text-2xl font-bold leading-snug">{{ 'UI.SHOP_FASTER_ON_OUR_APP' | translate }}</h3>
+
+                <p class="mt-5 text-sm leading-relaxed text-slate-400">
+                  Get app-exclusive deals & 15% off your first order.
+                </p>
+
+                <!-- App Store -->
+                <a
+                  href="https://www.apple.com/app-store/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-8 flex items-center gap-4 rounded-xl border border-white/10 bg-white/10 px-5 py-4 transition hover:bg-white/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.293 9.24609C12.2852 7.8125 12.9336 6.73047 14.2461 5.93359C13.5117 4.88281 12.4023 4.30469 10.9375 4.19141C9.55078 4.08203 8.03516 5 7.48047 5C6.89453 5 5.55078 4.23047 4.49609 4.23047C2.31641 4.26562 0 5.96875 0 9.43359C0 10.457 0.1875 11.5156 0.5625 12.6055C1.0625 14.0391 2.86719 17.5547 4.75 17.4961C5.73438 17.4727 6.42969 16.7969 7.71094 16.7969C8.95312 16.7969 9.59766 17.4961 10.6953 17.4961C12.5938 17.4688 14.2266 14.2734 14.7031 12.8359C12.1562 11.6367 12.293 9.32031 12.293 9.24609ZM10.082 2.83203C11.1484 1.56641 11.0508 0.414062 11.0195 0C10.0781 0.0546875 8.98828 0.640625 8.36719 1.36328C7.68359 2.13672 7.28125 3.09375 7.36719 4.17188C8.38672 4.25 9.31641 3.72656 10.082 2.83203Z"
+                      fill="white"
+                    />
+                  </svg>
+                  <span>
+                    <small class="block text-xs text-slate-400">{{ 'UI.DOWNLOAD_ON' | translate }}</small>
+                    <strong class="text-base">{{ 'UI.APP_STORE' | translate }}</strong>
+                  </span>
+                </a>
+
+                <!-- Google Play -->
+                <a
+                  href="https://play.google.com/store"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-3 flex items-center gap-4 rounded-xl border border-white/10 bg-white/10 px-5 py-4 transition hover:bg-white/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="20"
+                    viewBox="0 0 19 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M11.7188 9.15234L3.09766 0.507812L14.0664 6.80469L11.7188 9.15234ZM0.847656 0C0.339844 0.265625 0 0.75 0 1.37891V18.6172C0 19.2461 0.339844 19.7305 0.847656 19.9961L10.8711 9.99609L0.847656 0ZM17.457 8.8125L15.1562 7.48047L12.5898 10L15.1562 12.5195L17.5039 11.1875C18.207 10.6289 18.207 9.37109 17.457 8.8125ZM3.09766 19.4922L14.0664 13.1953L11.7188 10.8477L3.09766 19.4922Z"
+                      fill="white"
+                    />
+                  </svg>
+                  <span>
+                    <small class="block text-xs text-slate-400">{{ 'UI.GET_IT_ON' | translate }}</small>
+                    <strong class="text-base">{{ 'UI.GOOGLE_PLAY' | translate }}</strong>
+                  </span>
+                </a>
+
+                <div class="mt-8 flex flex-wrap items-center gap-3 text-sm">
+                  <span class="text-lg tracking-wide text-yellow-400">★★★★★</span>
+                  <span class="text-slate-400">4.9 · 100K+ downloads</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Contact information -->
+          <div class="mt-12 border-t border-gray-200 pt-8">
+            <div class="flex flex-col justify-between gap-6 sm:flex-row sm:flex-wrap">
+              <a
+                href="mailto:support@freshcart.com"
+                class="flex items-center gap-4 text-slate-800 transition hover:text-emerald-600"
+              >
+                <i class="pi pi-envelope text-2xl text-emerald-500"></i>
+                <span>support&#64;freshcart.com</span>
+              </a>
+
+              <a
+                href="tel:+18001234567"
+                class="flex items-center gap-4 text-slate-800 transition hover:text-emerald-600"
+              >
+                <i class="pi pi-phone text-2xl text-emerald-500"></i>
+                <span>+1 (800) 123-4567</span>
+              </a>
+
+              <div class="flex items-center gap-4 text-slate-800">
+                <i class="pi pi-map-marker text-2xl text-emerald-500"></i>
+                <span>{{ 'UI.CAIRO_EGYPT' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-[#F0FDF4] border-y border-[#DCFCE7]">
+      <div class="xl:container px-4 py-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-xl bg-[#DCFCE7] flex items-center justify-center shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="21"
+                height="17"
+                viewBox="0 0 21 17"
+                fill="none"
+              >
+                <path
+                  d="M0 2.25C0 1.00898 1.00898 0 2.25 0H12.375C13.616 0 14.625 1.00898 14.625 2.25V3.375H16.4074C17.0051 3.375 17.5781 3.61055 18 4.03242L19.5926 5.625C20.0145 6.04688 20.25 6.61992 20.25 7.21758V12.375C20.25 13.616 19.241 14.625 18 14.625H17.884C17.5184 15.9223 16.323 16.875 14.9062 16.875C13.4895 16.875 12.2977 15.9223 11.9285 14.625H8.32148C7.95586 15.9223 6.76055 16.875 5.34375 16.875C3.92695 16.875 2.73516 15.9223 2.36602 14.625H2.25C1.00898 14.625 0 13.616 0 12.375V2.25ZM18 9V7.21758L16.4074 5.625H14.625V9H18ZM6.75 13.7812C6.75 13.4083 6.60184 13.0506 6.33812 12.7869C6.0744 12.5232 5.71671 12.375 5.34375 12.375C4.97079 12.375 4.6131 12.5232 4.34938 12.7869C4.08566 13.0506 3.9375 13.4083 3.9375 13.7812C3.9375 14.1542 4.08566 14.5119 4.34938 14.7756C4.6131 15.0393 4.97079 15.1875 5.34375 15.1875C5.71671 15.1875 6.0744 15.0393 6.33812 14.7756C6.60184 14.5119 6.75 14.1542 6.75 13.7812ZM14.9062 15.1875C15.2792 15.1875 15.6369 15.0393 15.9006 14.7756C16.1643 14.5119 16.3125 14.1542 16.3125 13.7812C16.3125 13.4083 16.1643 13.0506 15.9006 12.7869C15.6369 12.5232 15.2792 12.375 14.9062 12.375C14.5333 12.375 14.1756 12.5232 13.9119 12.7869C13.6482 13.0506 13.5 13.4083 13.5 13.7812C13.5 14.1542 13.6482 14.5119 13.9119 14.7756C14.1756 15.0393 14.5333 15.1875 14.9062 15.1875Z"
+                  fill="#16A34A"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">{{ 'UI.FREE_SHIPPING' | translate }}</h4>
+              <p class="text-gray-500 text-xs">{{ 'UI.ON_ORDERS_OVER_500_EGP' | translate }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-xl bg-[#DCFCE7] flex items-center justify-center shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+              >
+                <path
+                  d="M9 2.25C7.00313 2.25 5.20664 3.11836 3.96914 4.5H5.625C6.24727 4.5 6.75 5.00273 6.75 5.625C6.75 6.24727 6.24727 6.75 5.625 6.75H1.125C0.502734 6.75 0 6.24727 0 5.625V1.125C0 0.502734 0.502734 0 1.125 0C1.74727 0 2.25 0.502734 2.25 1.125V3.04805C3.89883 1.18125 6.31055 0 9 0C13.9711 0 18 4.02891 18 9C18 13.9711 13.9711 18 9 18C5.94141 18 3.23789 16.4742 1.61367 14.1434C1.25859 13.6336 1.38164 12.934 1.89141 12.5754C2.40117 12.2168 3.10078 12.3434 3.45938 12.8531C4.68281 14.6039 6.70781 15.7465 9 15.7465C12.7266 15.7465 15.75 12.723 15.75 8.99648C15.75 5.26992 12.7266 2.25 9 2.25Z"
+                  fill="#16A34A"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">{{ 'UI.EASY_RETURNS' | translate }}</h4>
+              <p class="text-gray-500 text-xs">{{ 'UI.14_DAY_RETURN_POLICY' | translate }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-xl bg-[#DCFCE7] flex items-center justify-center shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="18"
+                viewBox="0 0 17 18"
+                fill="none"
+              >
+                <path
+                  d="M8.434 0C8.59572 0 8.75744 0.0351563 8.90509 0.101953L15.5285 2.91094C16.302 3.23789 16.8785 4.00078 16.875 4.92188C16.8574 8.40938 15.4231 14.7902 9.36564 17.6906C8.77853 17.9719 8.0965 17.9719 7.50939 17.6906C1.44845 14.7902 0.0175941 8.40938 1.59908e-05 4.92188C-0.00349963 4.00078 0.573063 3.23789 1.3465 2.91094L7.96642 0.101953C8.11408 0.0351563 8.27228 0 8.434 0ZM8.434 2.34844V15.641C13.2856 13.2926 14.5899 8.08945 14.6215 4.97461L8.434 2.35195V2.34844Z"
+                  fill="#16A34A"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">{{ 'UI.SECURE_PAYMENT' | translate }}</h4>
+              <p class="text-gray-500 text-xs">{{ 'UI.100_SECURE_CHECKOUT' | translate }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-xl bg-[#DCFCE7] flex items-center justify-center shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="18"
+                viewBox="0 0 16 18"
+                fill="none"
+              >
+                <path
+                  d="M7.875 2.25C5.09766 2.25 2.78789 4.26445 2.33086 6.91523C2.65781 6.80977 3.00938 6.75 3.375 6.75H3.9375C4.86914 6.75 5.625 7.50586 5.625 8.4375V11.8125C5.625 12.7441 4.86914 13.5 3.9375 13.5H3.375C1.51172 13.5 0 11.9883 0 10.125V7.875C0 3.52617 3.52617 0 7.875 0C12.2238 0 15.75 3.52617 15.75 7.875V13.7848C15.75 16.1156 13.8586 18.0035 11.5277 18.0035L8.4375 18H7.3125C6.38086 18 5.625 17.2441 5.625 16.3125C5.625 15.3809 6.38086 14.625 7.3125 14.625H8.4375C9.36914 14.625 10.125 15.3809 10.125 16.3125H11.5312C12.9305 16.3125 14.0625 15.1805 14.0625 13.7812V13.0465C13.5668 13.3348 12.9902 13.4965 12.375 13.4965H11.8125C10.8809 13.4965 10.125 12.7406 10.125 11.809V8.43398C10.125 7.50234 10.8809 6.74648 11.8125 6.74648H12.375C12.7406 6.74648 13.0887 6.80273 13.4191 6.91172C12.9621 4.26445 10.6559 2.24648 7.875 2.24648V2.25Z"
+                  fill="#16A34A"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 text-sm">24/7 Support</h4>
+              <p class="text-gray-500 text-xs">{{ 'UI.CONTACT_US_ANYTIME' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

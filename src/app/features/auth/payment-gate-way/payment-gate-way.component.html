@@ -1,0 +1,366 @@
+<main class="checkout-page min-h-screen bg-[#f7faf8] py-5 sm:py-8">
+  <div class="mx-auto w-full max-w-6xl px-3 sm:px-5 lg:px-6">
+    <nav class="mb-5 flex flex-wrap items-center gap-2 text-xs text-gray-500 sm:text-sm">
+      <a routerLink="/" class="cursor-pointer hover:text-green-700">{{ 'UI.HOME' | translate }}</a><span>/</span>
+      <a routerLink="/cart" class="cursor-pointer hover:text-green-700">{{ 'UI.CART' | translate }}</a><span>/</span>
+      <span class="font-medium text-gray-800">{{ 'UI.CHECKOUT' | translate }}</span>
+    </nav>
+
+    <header class="mb-6 flex items-center gap-3 sm:mb-8">
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm sm:h-12 sm:w-12"
+      >
+        <i class="fa-solid fa-clipboard-check"></i>
+      </span>
+      <div class="min-w-0 flex-1">
+        <h1 class="text-xl font-bold leading-tight text-gray-900 sm:text-2xl">
+          {{ 'UI.COMPLETE_YOUR_ORDER' | translate }}
+        </h1>
+        <p class="mt-1 text-xs text-gray-500 sm:text-sm">
+          {{ 'UI.REVIEW_YOUR_ITEMS_AND_COMPLETE_YOUR_PURCHASE' | translate }}
+        </p>
+      </div>
+      <span
+        class="hidden items-center gap-1 rounded-full bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-700 sm:inline-flex"
+      >
+        <i class="fa-solid fa-lock text-[10px]"></i> {{ 'UI.SAFE_SECURE' | translate }}
+      </span>
+    </header>
+
+    @if (errorMessage()) {
+      <div
+        role="alert"
+        class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+      >
+        {{ errorMessage() | translate }}
+      </div>
+    }
+
+    <div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-12 lg:gap-6">
+      <section class="space-y-5 lg:col-span-8">
+        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div class="flex items-center gap-2 bg-green-700 px-4 py-3 text-white sm:px-5">
+            <i class="fa-solid fa-location-dot text-sm"></i>
+            <div>
+              <h2 class="text-sm font-bold sm:text-base">{{ 'UI.SHIPPING_ADDRESS' | translate }}</h2>
+              <p class="text-[11px] text-green-100">{{ 'UI.WHERE_SHOULD_WE_DELIVER_YOUR_ORDER' | translate }}</p>
+            </div>
+          </div>
+          <div class="p-4 sm:p-5">
+            @if (addresses().length) {
+              <div class="mb-4">
+                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Saved addresses <span class="normal-case">({{ addresses().length }})</span>
+                </p>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  @for (address of addresses(); track address._id) {
+                    <button
+                      type="button"
+                      (click)="selectAddress(address)"
+                      [attr.aria-pressed]="selectedAddress()?._id === address._id"
+                      class="w-full cursor-pointer rounded-lg border p-3 text-left transition duration-200 hover:-translate-y-0.5 hover:border-green-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                      [class.border-green-600]="selectedAddress()?._id === address._id"
+                      [class.bg-green-50]="selectedAddress()?._id === address._id"
+                      [class.ring-2]="selectedAddress()?._id === address._id"
+                      [class.ring-green-200]="selectedAddress()?._id === address._id"
+                      [class.shadow-sm]="selectedAddress()?._id === address._id"
+                      [class.border-gray-200]="selectedAddress()?._id !== address._id"
+                    >
+                      <span class="flex items-start gap-2.5">
+                        <i
+                          class="fa-solid fa-house mt-0.5 text-xs"
+                          [class.text-green-700]="selectedAddress()?._id === address._id"
+                          [class.text-gray-400]="selectedAddress()?._id !== address._id"
+                        ></i>
+                        <span class="min-w-0 flex-1">
+                          <span class="flex items-center justify-between gap-2">
+                            <span class="truncate text-xs font-bold text-gray-800">{{
+                              address.name
+                            }}</span>
+                            <span
+                              class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
+                              [class.border-green-600]="selectedAddress()?._id === address._id"
+                              [class.bg-green-600]="selectedAddress()?._id === address._id"
+                              [class.border-gray-300]="selectedAddress()?._id !== address._id"
+                              ><i
+                                class="fa-solid fa-check text-[8px] text-white"
+                                [class.hidden]="selectedAddress()?._id !== address._id"
+                              ></i
+                            ></span>
+                          </span>
+                          <span class="mt-1 block text-xs leading-relaxed text-gray-600">{{
+                            address.details
+                          }}</span>
+                          <span class="mt-1 block text-[11px] text-gray-500"
+                            >{{ address.city }} · {{ address.phone }}</span
+                          >
+                        </span>
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
+            <a
+              routerLink="/profile/addresses"
+              class="mb-4 flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-green-300 bg-green-50/60 px-3 py-2.5 text-xs font-semibold text-green-800 transition hover:border-green-500 hover:bg-green-50 sm:text-sm"
+            >
+              <span
+                class="flex h-6 w-6 items-center justify-center rounded-md bg-green-600 text-white"
+                ><i class="fa-solid fa-plus text-[10px]"></i
+              ></span>
+              <span class="flex-1">{{ 'UI.USE_DIFFERENT_ADDRESS' | translate }}</span
+              ><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+
+            @if (selectedAddress()) {
+              <div
+                class="mb-3 flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2.5 text-xs text-green-800"
+              >
+                <i class="fa-solid fa-circle-check text-green-600"></i
+                ><span
+                  >{{ 'UI.USING' | translate }} <strong>{{ selectedAddress()?.name }}</strong
+                  >. Fill any field below to use a custom address instead.</span
+                >
+              </div>
+            }
+            <form
+              [formGroup]="addressForm"
+              (input)="onAddressFormInput()"
+              class="grid gap-3 sm:grid-cols-2"
+            >
+              <label class="text-xs font-semibold text-gray-700"
+                >{{ 'UI.CITY' | translate }}
+                <input
+                  formControlName="city"
+                  type="text"
+                  [placeholder]="'UI.ADDRESS_CITY_EXAMPLE' | translate"
+                  class="checkout-input mt-1.5 w-full"
+                />
+                @if (
+                  addressForm.get('city')?.touched && addressForm.get('city')?.hasError('required')
+                ) {
+                  <app-error-msg [errorMsg]="'UI.ERROR_CITY_REQUIRED'"></app-error-msg>
+                }
+              </label>
+              <label class="text-xs font-semibold text-gray-700"
+                >{{ 'UI.PHONE_NUMBER' | translate }}
+                <input
+                  formControlName="phone"
+                  type="tel"
+                  placeholder="01xxxxxxxxx"
+                  class="checkout-input mt-1.5 w-full"
+                />
+                @if (addressForm.get('phone')?.touched) {
+                  @if (addressForm.get('phone')?.hasError('required')) {
+                    <app-error-msg [errorMsg]="'UI.ERROR_PHONE_REQUIRED'"></app-error-msg>
+                  }
+                  @if (addressForm.get('phone')?.hasError('pattern')) {
+                    <app-error-msg
+                      [errorMsg]="'UI.ERROR_PHONE_INVALID'"
+                    ></app-error-msg>
+                  }
+                }
+              </label>
+              <label class="text-xs font-semibold text-gray-700 sm:col-span-2"
+                >{{ 'UI.STREET_ADDRESS_DETAILS' | translate }}
+                <textarea
+                  formControlName="details"
+                  rows="2"
+                  [placeholder]="'UI.BUILDING_ADDRESS_PLACEHOLDER' | translate"
+                  class="checkout-input mt-1.5 w-full resize-y"
+                ></textarea>
+                @if (
+                  addressForm.get('details')?.touched &&
+                  addressForm.get('details')?.hasError('required')
+                ) {
+                  <app-error-msg [errorMsg]="'UI.ERROR_ADDRESS_REQUIRED'"></app-error-msg>
+                }
+              </label>
+            </form>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div class="flex items-center gap-2 bg-green-700 px-4 py-3 text-white sm:px-5">
+            <i class="fa-regular fa-credit-card text-sm"></i>
+            <div>
+              <h2 class="text-sm font-bold sm:text-base">{{ 'UI.PAYMENT_METHOD' | translate }}</h2>
+              <p class="text-[11px] text-green-100">{{ 'UI.CHOOSE_HOW_YOU_D_LIKE_TO_PAY' | translate }}</p>
+            </div>
+          </div>
+          <div class="space-y-2.5 p-4 sm:p-5">
+            <button
+              type="button"
+              (click)="selectPayment('cash')"
+              [attr.aria-pressed]="cash()"
+              class="flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3 text-left transition duration-200 hover:-translate-y-0.5 hover:border-green-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 sm:p-3.5"
+              [class.border-green-500]="cash()"
+              [class.bg-green-50]="cash()"
+              [class.ring-2]="cash()"
+              [class.ring-green-200]="cash()"
+              [class.shadow-sm]="cash()"
+              [class.border-gray-200]="!cash()"
+            >
+              <span
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition"
+                [class.bg-green-100]="cash()"
+                [class.bg-gray-100]="!cash()"
+                ><i
+                  class="fa-solid fa-money-bill-wave text-gray-500 transition"
+                  [class.text-green-700]="cash()"
+                ></i
+              ></span>
+              <span class="min-w-0 flex-1"
+                ><span class="block text-xs font-bold text-gray-800">{{ 'UI.CASH_ON_DELIVERY' | translate }}</span
+                ><span class="mt-0.5 block text-[11px] text-gray-500"
+                  >{{ 'UI.PAY_WHEN_YOU_RECEIVE_YOUR_ORDER' | translate }}</span
+                ></span
+              >
+              <span
+                class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition"
+                [class.border-green-600]="cash()"
+                [class.bg-green-600]="cash()"
+                [class.border-gray-300]="!cash()"
+                ><i class="fa-solid fa-check text-[9px] text-white" [class.hidden]="!cash()"></i
+              ></span>
+            </button>
+            <button
+              type="button"
+              (click)="selectPayment('card')"
+              [attr.aria-pressed]="card()"
+              class="flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3 text-left transition duration-200 hover:-translate-y-0.5 hover:border-green-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 sm:p-3.5"
+              [class.border-green-500]="card()"
+              [class.bg-green-50]="card()"
+              [class.ring-2]="card()"
+              [class.ring-green-200]="card()"
+              [class.shadow-sm]="card()"
+              [class.border-gray-200]="!card()"
+            >
+              <span
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+                [class.bg-green-100]="card()"
+                [class.bg-gray-100]="!card()"
+                ><i
+                  class="fa-regular fa-credit-card text-gray-500"
+                  [class.text-green-700]="card()"
+                ></i
+              ></span>
+              <span class="min-w-0 flex-1"
+                ><span class="block text-xs font-bold text-gray-800">{{ 'UI.PAY_ONLINE' | translate }}</span
+                ><span class="mt-0.5 block text-[11px] text-gray-500"
+                  >{{ 'UI.SECURE_PAYMENT_CARDS' | translate }}</span
+                ><span class="mt-2 flex items-center gap-2"
+                  ><img
+                    src="/images/visa.png"
+                    alt="Visa"
+                    class="h-6 w-10 rounded object-contain" /><img
+                    src="/images/cradit-card.png"
+                    alt="Mastercard"
+                    class="h-6 w-10 rounded object-contain" /><img
+                    src="/images/am-ex.png"
+                    alt="American Express"
+                    class="h-6 w-10 rounded object-contain" /></span
+              ></span>
+              <span
+                class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition"
+                [class.border-green-600]="card()"
+                [class.bg-green-600]="card()"
+                [class.border-gray-300]="!card()"
+                ><i class="fa-solid fa-check text-[9px] text-white" [class.hidden]="!card()"></i
+              ></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <aside
+        class="order-summary overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm lg:sticky lg:top-5 lg:col-span-4"
+      >
+        <div class="flex items-center gap-2 bg-green-700 px-4 py-3 text-white sm:px-5">
+          <i class="fa-solid fa-receipt text-sm"></i>
+          <div>
+            <h2 class="text-sm font-bold sm:text-base">{{ 'UI.ORDER_SUMMARY' | translate }}</h2>
+            <p class="text-[11px] text-green-100">{{ cart().length }} item(s)</p>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          @if (cart().length) {
+            <div class="mb-4 max-h-64 space-y-3 overflow-y-auto pr-1">
+              @for (item of cart(); track item._id) {
+                <div class="flex items-center gap-2.5">
+                  <img
+                    [src]="item.product.imageCover"
+                    [alt]="item.product.title"
+                    class="h-10 w-10 shrink-0 rounded-md border border-gray-100 bg-gray-50 object-contain p-1 sm:h-12 sm:w-12"
+                  />
+                  <div class="min-w-0 flex-1">
+                    <h3 class="line-clamp-2 text-[11px] font-semibold leading-snug text-gray-800">
+                      {{ item.product.title }}
+                    </h3>
+                    <p class="mt-1 text-[10px] text-gray-500">{{ 'UI.QUANTITY_LABEL' | translate }} {{ item.count }}</p>
+                  </div>
+                  <span class="shrink-0 text-[11px] font-bold text-gray-800"
+                    >{{ item.price * item.count }} EGP</span
+                  >
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="py-3 text-xs text-gray-500">{{ 'UI.YOUR_CART_IS_EMPTY' | translate }}</p>
+          }
+          <div class="space-y-2.5 border-t border-gray-100 pt-3 text-xs">
+            <div class="flex justify-between text-gray-600">
+              <span>{{ 'UI.SUBTOTAL' | translate }}</span
+              ><span class="font-semibold text-gray-800">{{ subtotal() }} EGP</span>
+            </div>
+            <div class="flex justify-between text-gray-600">
+              <span>{{ 'UI.SHIPPING' | translate }}</span
+              ><span class="font-semibold" [class.text-green-700]="shippingCost === 0">{{
+                shippingCost === 0 ? ('UI.FREE' | translate) : shippingCost + ' EGP'
+              }}</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+              <span class="font-bold text-gray-900">{{ 'UI.TOTAL' | translate }}</span
+              ><span class="text-lg font-extrabold text-green-700"
+                >{{ finalTotal }} <small class="text-[10px] font-semibold">{{ 'UI.EGP' | translate }}</small></span
+              >
+            </div>
+          </div>
+          @if (subtotal() < 500 && cart().length) {
+            <p
+              class="mt-3 rounded-md bg-amber-50 px-2.5 py-2 text-[10px] leading-relaxed text-amber-800"
+            >
+              <i class="fa-solid fa-truck-fast mr-1"></i>{{ 500 - subtotal() }} EGP {{ 'UI.QUALIFY_FREE_DELIVERY' | translate }}
+              for free shipping.
+            </p>
+          }
+          <button
+            type="button"
+            (click)="placeOrder()"
+            [disabled]="adding() || done() || !cart().length"
+            class="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-green-700 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            @if (adding()) {
+              <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+            } @else if (done()) {
+              <i class="fa-solid fa-check"></i>
+            } @else {
+              <i class="fa-solid fa-lock text-[10px]"></i>
+            }
+            <span>{{ done() ? ('UI.ORDER_PLACED' | translate) : ('UI.PLACE_ORDER' | translate) }}</span>
+          </button>
+          <div class="mt-3 grid grid-cols-3 gap-1 text-center text-[9px] text-gray-500">
+            <span><i class="fa-solid fa-lock mb-1 block text-green-600"></i>{{ 'UI.SECURE' | translate }}</span
+            ><span
+              ><i class="fa-solid fa-truck-fast mb-1 block text-green-600"></i>{{ 'UI.FAST_DELIVERY' | translate }}</span
+            ><span
+              ><i class="fa-solid fa-rotate-left mb-1 block text-green-600"></i>{{ 'UI.EASY_RETURNS' | translate }}</span
+            >
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>

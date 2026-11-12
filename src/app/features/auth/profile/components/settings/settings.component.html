@@ -1,0 +1,317 @@
+<div class="space-y-6">
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-900">{{ 'UI.ACCOUNT_SETTINGS' | translate }}</h2>
+    <p class="text-gray-500 text-sm mt-1">
+      Update your profile information and change your password
+    </p>
+  </div>
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="p-6 sm:p-8 border-b border-gray-100">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
+          <svg
+            width="1rem"
+            hight="1rem"
+            data-prefix="fas"
+            data-icon="user"
+            class="svg-inline--fa fa-user text-2xl text-green-600"
+            role="img"
+            viewBox="0 0 448 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900">{{ 'UI.PROFILE_INFORMATION' | translate }}</h3>
+          <p class="text-sm text-gray-500">{{ 'UI.UPDATE_YOUR_PERSONAL_DETAILS' | translate }}</p>
+        </div>
+      </div>
+      <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.FULL_NAME' | translate }}</label
+          ><input
+            formControlName="name"
+            [placeholder]="'UI.ENTER_YOUR_NAME' | translate"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+            required=""
+            type="text"
+            value="Raja Reyes"
+          />
+          @if (userForm.get('name')?.touched) {
+            @if (userForm.get('name')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_NAME_REQUIRED'"></app-error-msg>
+            }
+            @if (userForm.get('name')?.hasError('minlength')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_NAME_MIN_LENGTH'"></app-error-msg>
+            }
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.EMAIL_ADDRESS' | translate }}</label
+          ><input
+            formControlName="email"
+            [placeholder]="'UI.ENTER_YOUR_EMAIL' | translate"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+            required=""
+            type="email"
+            value=""
+          />
+          @if (userForm.get('email')?.touched) {
+            @if (userForm.get('email')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_EMAIL_REQUIRED'"></app-error-msg>
+            }
+            @if (userForm.get('email')?.hasError('email')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_EMAIL_INVALID'"></app-error-msg>
+            }
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.PHONE_NUMBER' | translate }}</label
+          ><input
+            formControlName="phone"
+            placeholder="01xxxxxxxxx"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+            required=""
+            type="tel"
+            value=""
+          />
+          @if (userForm.get('phone')?.touched) {
+            @if (userForm.get('phone')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_PHONE_REQUIRED'"></app-error-msg>
+            }
+            @if (userForm.get('phone')?.hasError('pattern')) {
+              <app-error-msg
+                [errorMsg]="'UI.ERROR_PHONE_INVALID'"
+              ></app-error-msg>
+            }
+          }
+        </div>
+        <div class="pt-4">
+          <button
+            [disabled]="userForm.invalid"
+            type="submit"
+            class="inline-flex cursor-pointer items-center gap-2 px-6 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 shadow-lg shadow-green-600/25"
+          >
+            @if (userloading()) {
+              <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+              <span>{{ 'UI.SAVEING' | translate }}</span>
+            } @else {
+              <svg
+                width="1rem"
+                hight="1rem"
+                data-prefix="fas"
+                data-icon="floppy-disk"
+                class="svg-inline--fa fa-floppy-disk"
+                role="img"
+                viewBox="0 0 448 512"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-242.7c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32L64 32zm32 96c0-17.7 14.3-32 32-32l160 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-160 0c-17.7 0-32-14.3-32-32l0-64zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+                ></path></svg
+              >{{ 'UI.SAVE_CHANGES' | translate }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="p-6 sm:p-8 bg-gray-50">
+      <h3 class="font-bold text-gray-900 mb-4">{{ 'UI.ACCOUNT_INFORMATION' | translate }}</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500">{{ 'UI.ROLE' | translate }}</span
+          ><span class="px-3 py-1 rounded-lg bg-green-100 text-green-700 font-medium capitalize">{{
+            user().role
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="p-6 sm:p-8">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center">
+          <svg
+            width="1rem"
+            hight="1rem"
+            data-prefix="fas"
+            data-icon="lock"
+            class="svg-inline--fa fa-lock text-2xl text-amber-600"
+            role="img"
+            viewBox="0 0 384 512"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M128 96l0 64 128 0 0-64c0-35.3-28.7-64-64-64s-64 28.7-64 64zM64 160l0-64C64 25.3 121.3-32 192-32S320 25.3 320 96l0 64c35.3 0 64 28.7 64 64l0 224c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 224c0-35.3 28.7-64 64-64z"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900">{{ 'UI.CHANGE_PASSWORD' | translate }}</h3>
+          <p class="text-sm text-gray-500">{{ 'UI.UPDATE_YOUR_ACCOUNT_PASSWORD' | translate }}</p>
+        </div>
+      </div>
+      <form [formGroup]="changePasswordForm" (ngSubmit)="updatePassword()" class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.CURRENT_PASSWORD' | translate }}</label>
+          <div class="relative">
+            <input
+              #currentPassword
+              formControlName="currentPassword"
+              [placeholder]="'UI.ENTER_YOUR_CURRENT_PASSWORD' | translate"
+              class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+              required=""
+              type="password"
+              value=""
+            /><button
+              type="button"
+              class="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <div
+                (click)="togglePassword(currentPassword, icon)"
+                class="absolute top-1/2 cursor-pointer right-4 -translate-y-1/2"
+              >
+                <i #icon class="fa-solid fa-eye-slash"></i>
+              </div>
+            </button>
+          </div>
+          @if (changePasswordForm.get('currentPassword')?.touched) {
+            @if (changePasswordForm.get('currentPassword')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_CURRENT_PASSWORD_REQUIRED'"></app-error-msg>
+            }
+            @if (changePasswordForm.get('currentPassword')?.hasError('pattern')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_CURRENT_PASSWORD_INVALID'"></app-error-msg>
+            }
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.NEW_PASSWORD' | translate }}</label>
+          <div class="relative">
+            <input
+              #password
+              formControlName="password"
+              [placeholder]="'UI.ENTER_YOUR_NEW_PASSWORD' | translate"
+              class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+              required=""
+              minlength="6"
+              type="password"
+              value=""
+            /><button
+              type="button"
+              class="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <div
+                (click)="togglePassword(password, icon2)"
+                class="absolute top-1/2 cursor-pointer right-4 -translate-y-1/2"
+              >
+                <i #icon2 class="fa-solid fa-eye-slash"></i>
+              </div>
+            </button>
+          </div>
+          <div class="password-requirements">
+            <div class="flex items-center gap-2">
+              <div
+                class="grow h-1.5 bg-gray-200 rounded-full overflow-hidden"
+                role="progressbar"
+                [attr.aria-valuenow]="passwordStrength.width"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-label]="('UI.PASSWORD_STRENGTH' | translate) + (passwordStrength.label | translate)"
+              >
+                <!-- Progress -->
+                <div
+                  class="h-full rounded-full transition-all duration-300 ease-out"
+                  [class]="passwordStrength.color"
+                  [style.width.%]="passwordStrength.width"
+                ></div>
+              </div>
+              <span class="text-sm font-medium min-w-12.5">
+                {{ passwordStrength.label | translate }}
+              </span>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">
+            Must be at least 8 characters with numbers and symbols.
+          </p>
+          @if (changePasswordForm.get('password')?.touched) {
+            @if (changePasswordForm.get('password')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_PASSWORD_REQUIRED'"></app-error-msg>
+            }
+            @if (changePasswordForm.get('password')?.hasError('pattern')) {
+              <app-error-msg
+                [errorMsg]="'UI.ERROR_PASSWORD_STRENGTH'"
+              ></app-error-msg>
+            }
+          }
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'UI.CONFIRM_NEW_PASSWORD' | translate }}</label>
+          <div class="relative">
+            <input
+              #rePassword
+              formControlName="rePassword"
+              [placeholder]="'UI.CONFIRM_YOUR_NEW_PASSWORD' | translate"
+              class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none transition-all"
+              required=""
+              type="password"
+              value=""
+            /><button
+              type="button"
+              class="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <div
+                (click)="togglePassword(rePassword, icon3)"
+                class="absolute top-1/2 cursor-pointer right-4 -translate-y-1/2"
+              >
+                <i #icon3 class="fa-solid fa-eye-slash"></i>
+              </div>
+            </button>
+          </div>
+          @if (changePasswordForm.get('rePassword')?.touched) {
+            @if (changePasswordForm.get('rePassword')?.hasError('required')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_CONFIRM_PASSWORD_REQUIRED'"></app-error-msg>
+            }
+            @if (changePasswordForm.get('rePassword')?.hasError('pattern')) {
+              <app-error-msg [errorMsg]="'UI.ERROR_PASSWORD_MISMATCH'"></app-error-msg>
+            }
+          }
+        </div>
+        <div class="pt-4">
+          <button
+            [disabled]="changePasswordForm.invalid"
+            type="submit"
+            class="inline-flex cursor-pointer items-center gap-2 px-6 py-3 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors disabled:opacity-50 shadow-lg shadow-amber-600/25"
+          >
+            @if (passwordloading()) {
+              <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+              <span>{{ 'UI.CHANGING_PASSWORD' | translate }}</span>
+            } @else {
+              <svg
+                width="1rem"
+                hight="1rem"
+                data-prefix="fas"
+                data-icon="lock"
+                class="svg-inline--fa fa-lock"
+                role="img"
+                viewBox="0 0 384 512"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M128 96l0 64 128 0 0-64c0-35.3-28.7-64-64-64s-64 28.7-64 64zM64 160l0-64C64 25.3 121.3-32 192-32S320 25.3 320 96l0 64c35.3 0 64 28.7 64 64l0 224c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 224c0-35.3 28.7-64 64-64z"
+                ></path>
+              </svg>
+              Change Password
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

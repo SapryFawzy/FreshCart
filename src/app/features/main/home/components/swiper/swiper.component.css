@@ -1,0 +1,62 @@
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+swiper-container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  width: 25px;
+  height: 25px;
+  padding: 8px;
+  font-size: 20px;
+  background: white;
+  color: #16a34a;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+swiper-container::part(button-prev):hover,
+swiper-container::part(button-next):hover {
+  background: #16a34a;
+  color: white;
+}
+
+swiper-container::part(pagination) {
+  bottom: 15px;
+}
+
+swiper-container::part(bullet) {
+  width: 9px;
+  height: 9px;
+  background: white;
+  opacity: 0.7;
+}
+
+swiper-container::part(bullet-active) {
+  width: 25px;
+  border-radius: 10px;
+  background: #16a34a;
+  opacity: 1;
+}
