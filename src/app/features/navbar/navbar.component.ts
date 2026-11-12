@@ -65,6 +65,7 @@ export class NavbarComponent implements OnInit {
   searchForm = this.fb.group({
     search: ['', Validators.required],
   });
+  initWhenLogedIn: WritableSignal<boolean> = signal(true);
 
   ngOnInit(): void {
     this.initNav();
@@ -74,6 +75,10 @@ export class NavbarComponent implements OnInit {
         let token = localStorage.getItem('token');
         if (!token) token = sessionStorage.getItem('token');
         if (token) {
+          if (this.initWhenLogedIn()) {
+            this.initNav();
+            this.initWhenLogedIn.set(false);
+          }
           this.getWishlistAndCartCount();
         } else {
           this.userService.wishListCount.set(0);
@@ -288,6 +293,7 @@ export class NavbarComponent implements OnInit {
     this.user.set(null);
     this.isLogedInUser.set(false);
     this.initNav();
+    this.initWhenLogedIn.set(true);
     this.router.navigate(['/login']);
   }
 
