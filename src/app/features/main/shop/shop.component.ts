@@ -11,10 +11,11 @@ import { IspecificCatgoryRes } from '../../../core/models/catgoryRes/icatgory-re
 import { tap } from 'rxjs';
 import { IbrandRes } from '../../../core/models/brand-res/ibrand-res.interface';
 import { Ibrand } from '../../../core/models/brand/ibrand.interface';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @Component({
   selector: 'app-shop',
-  imports: [ProductCardComponent, RouterLink, TranslatePipe],
+  imports: [ProductCardComponent, RouterLink, TranslatePipe,NgxPaginationModule],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
@@ -30,6 +31,9 @@ export class ShopComponent {
   categoryID: WritableSignal<string | null> = signal(null);
   brandID: WritableSignal<string | null> = signal(null);
   subcategoryID: WritableSignal<string | null> = signal(null);
+  currentPage : WritableSignal<number> = signal(1);
+  limitedItem : WritableSignal<number> = signal(0);
+  totaleItems : WritableSignal<number> = signal(0);
 
   ngOnInit(): void {
     this.getCategoryId();
@@ -76,9 +80,9 @@ export class ShopComponent {
     });
   }
 
-  getAllProducts(): void {
+  getAllProducts(page: number = 1): void {
     let param;
-    let endpoint;
+
     if (this.categoryID()) {
       param = '?category=' + this.categoryID();
     }
@@ -91,7 +95,14 @@ export class ShopComponent {
       param = '?subcategory=' + this.subcategoryID();
     }
 
+    if (page) {
+      param = '?page=' + page;
+    }
+
     this.productsService.getAllProducts(param).subscribe((res: IproductRes) => {
+      this.currentPage.set(res.metadata.currentPage);
+      this.limitedItem.set(res.metadata.limit);
+      this.totaleItems.set(res.results);
       this.products.set(res.data);
       setTimeout(() => {
         this.done.set(true);
@@ -105,5 +116,9 @@ export class ShopComponent {
     this.catgory.set(null);
     this.brand.set(null);
     this.getAllProducts();
+  }
+
+  pageChanged(event : number) : void {
+    this.getAllProducts(event);
   }
 }

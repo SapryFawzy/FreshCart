@@ -157,3 +157,19 @@ body {
   background-color: #ff8383;
   color: #ff0000 !important;
 }
+
+.ngx-pagination .current {
+  border-radius: 0.5rem;
+  background: var(--color-primary) !important;
+  cursor: pointer !important;
+  color: #fefefe;
+}
+
+.ngx-pagination a,
+.ngx-pagination button {
+  cursor: pointer;
+  color: #0a0a0a;
+  display: block;
+  padding: 0.1875rem 0.625rem;
+  border-radius: 0.5rem !important;
+}
