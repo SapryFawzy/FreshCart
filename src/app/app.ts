@@ -4,6 +4,7 @@ import { NavbarComponent } from './features/navbar/navbar.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { TranslationService } from './core/services/translation.service';
 import { isPlatformBrowser } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,14 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class App {
   protected readonly title = signal('e-commarce-app');
+  private readonly translate = inject(TranslateService);
   private readonly translateService = inject(TranslationService);
   private readonly platform_id = inject(PLATFORM_ID);
   constructor() {
+    this.translate.addLangs(['ar','en']);
     if (isPlatformBrowser(this.platform_id)) {
       const lang = localStorage.getItem('lang') === 'ar' ? 'ar' : 'en';
       this.translateService.changeLanguage(lang);
-      document.documentElement.classList.toggle('app-dark', localStorage.getItem('theme') === 'dark');
     }
   }
 }
