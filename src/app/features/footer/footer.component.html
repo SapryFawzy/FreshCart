@@ -64,12 +64,23 @@
       <div>
         <h3 class="footer-heading text-xl font-bold mb-2">{{ 'UI.SHOP' | translate }}</h3>
         <ul class="footer-list cursor-pointer">
-          <li><a href="#">{{ 'UI.ALL_PRODUCTS' | translate }}</a></li>
-          <li><a href="#">{{ 'UI.ALL_CATEGORIES' | translate }}</a></li>
-          <li><a href="#">{{ 'UI.BRANDS' | translate }}</a></li>
-          <li><a href="#">{{ 'UI.ELECTRONICS' | translate }}</a></li>
-          <li><a href="#">{{ 'UI.MENS_FASHION' | translate }}</a></li>
-          <li><a href="#">{{ 'UI.WOMENS_FASHION' | translate }}</a></li>
+          <li>
+            <a routerLink="/shop" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.ALL_PRODUCTS' | translate
+            }}</a>
+          </li>
+          <li>
+            <a
+              routerLink="/categories"
+              class="hover:text-green-500 transition-colors duration-300"
+              >{{ 'UI.ALL_CATEGORIES' | translate }}</a
+            >
+          </li>
+          <li>
+            <a routerLink="/brands" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.BRANDS' | translate
+            }}</a>
+          </li>
         </ul>
       </div>
 
@@ -77,22 +88,60 @@
       <div>
         <h3 class="footer-heading text-xl font-bold mb-2">{{ 'UI.QUICK_LINKS' | translate }}</h3>
         <ul class="footer-list">
-          <li><a routerLink="/about-us">{{ 'UI.ABOUT_US' | translate }}</a></li>
-          <li><a routerLink="/contact-us">{{ 'UI.CONTACT_US' | translate }}</a></li>
-          <li><a routerLink="/profile">{{ 'UI.MY_ACCOUNT' | translate }}</a></li>
-          <li><a routerLink="/cart">{{ 'UI.MY_ORDERS' | translate }}</a></li>
-          <li><a routerLink="/faqs">{{ 'UI.FAQS' | translate }}</a></li>
+          <li>
+            <a routerLink="/" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.ABOUT_US' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/contact" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.CONTACT_US' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/profile" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.MY_ACCOUNT' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/cart" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.MY_ORDERS' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.FAQS' | translate
+            }}</a>
+          </li>
         </ul>
       </div>
 
       <!-- Customer Service -->
       <div>
-        <h3 class="footer-heading text-xl font-bold mb-2">{{ 'UI.CUSTOMER_SERVICE' | translate }}</h3>
+        <h3 class="footer-heading text-xl font-bold mb-2">
+          {{ 'UI.CUSTOMER_SERVICE' | translate }}
+        </h3>
         <ul class="footer-list">
-          <li><a routerLink="">{{ 'UI.SHIPPING_INFORMATION' | translate }}</a></li>
-          <li><a routerLink="">{{ 'UI.RETURNS_REFUNDS' | translate }}</a></li>
-          <li><a routerLink="">{{ 'UI.PRIVACY_POLICY' | translate }}</a></li>
-          <li><a routerLink="">{{ 'UI.TERMS_CONDITIONS' | translate }}</a></li>
+          <li>
+            <a routerLink="" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.SHIPPING_INFORMATION' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.RETURNS_REFUNDS' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/privacy" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.PRIVACY_POLICY' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/terms" class="hover:text-green-500 transition-colors duration-300">{{
+              'UI.TERMS_CONDITIONS' | translate
+            }}</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -133,4 +182,3 @@
     </div>
   </div>
 </footer>
-

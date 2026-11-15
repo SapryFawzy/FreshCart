@@ -13,6 +13,16 @@ export const routes: Routes = [
       import('./features/main/catgories/catgories.component').then((c) => c.CatgoriesComponent),
   },
   {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/main/privacy/privacy.component').then((c) => c.PrivacyComponent),
+  },
+  {
+    path: 'terms',
+    loadComponent: () =>
+      import('./features/main/terms/terms.component').then((c) => c.TermsComponent),
+  },
+  {
     path: 'search',
     loadComponent: () =>
       import('./features/main/search/search.component').then((c) => c.SearchComponent),
