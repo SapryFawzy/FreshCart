@@ -75,11 +75,13 @@ export class NavbarComponent implements OnInit {
         let token = localStorage.getItem('token');
         if (!token) token = sessionStorage.getItem('token');
         if (token) {
-          if (this.initWhenLogedIn()) {
-            this.initNav();
-            this.initWhenLogedIn.set(false);
-          }
-          this.getWishlistAndCartCount();
+          this.userService.verifyToken().subscribe(() => {
+            if (this.initWhenLogedIn()) {
+              this.initNav();
+              this.initWhenLogedIn.set(false);
+            }
+            this.getWishlistAndCartCount();
+          });
         } else {
           this.userService.wishListCount.set(0);
           this.userService.cartCount.set(0);

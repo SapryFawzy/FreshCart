@@ -187,23 +187,27 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   private loadCurrentUser(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
-    this.isLoggedIn.set(!!token);
-    let tokenUserId: string | undefined;
     if (token) {
-      try {
-        tokenUserId =
-          jwtDecode<{ id?: string; _id?: string }>(token).id ??
-          jwtDecode<{ _id?: string }>(token)._id;
-      } catch {
-        tokenUserId = undefined;
-      }
-    }
-    try {
-      const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
-      const user = rawUser ? (JSON.parse(rawUser) as { id?: string; _id?: string }) : {};
-      this.currentUserId.set(user.id ?? user._id ?? tokenUserId ?? null);
-    } catch {
-      this.currentUserId.set(tokenUserId ?? null);
+      this.userService.verifyToken().subscribe(() => {
+        this.isLoggedIn.set(!!token);
+        let tokenUserId: string | undefined;
+        if (token) {
+          try {
+            tokenUserId =
+              jwtDecode<{ id?: string; _id?: string }>(token).id ??
+              jwtDecode<{ _id?: string }>(token)._id;
+          } catch {
+            tokenUserId = undefined;
+          }
+        }
+        try {
+          const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
+          const user = rawUser ? (JSON.parse(rawUser) as { id?: string; _id?: string }) : {};
+          this.currentUserId.set(user.id ?? user._id ?? tokenUserId ?? null);
+        } catch {
+          this.currentUserId.set(tokenUserId ?? null);
+        }
+      });
     }
   }
 
@@ -421,7 +425,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        const exists = this.userService.wishlistIds().has(productId);
+        this.userService.verifyToken().subscribe(()=>{
+          const exists = this.userService.wishlistIds().has(productId);
         const action = exists
           ? this.userService.removefromWithList(productId)
           : this.userService.addToWithList({ productId });
@@ -429,6 +434,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           this.userService.setWishlistMembership(productId, !exists);
           this.toastr.success(res.message, 'Fresh Cart');
         });
+        })
       } else {
         this.toastr.warning('plz login frist!');
       }
@@ -440,19 +446,21 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.adding.set(true);
-        this.done.set(false);
-        const payload = {
-          productId: id,
-        };
-        this.userService.addToCart(payload).subscribe((res: any) => {
-          this.toastr.success(res.message, 'Fresh Cart');
-          this.userService.refreshCartCount();
-          this.adding.set(false);
-          this.done.set(true);
-          setTimeout(() => {
-            this.done.set(false);
-          }, 1000);
+        this.userService.verifyToken().subscribe(() => {
+          this.adding.set(true);
+          this.done.set(false);
+          const payload = {
+            productId: id,
+          };
+          this.userService.addToCart(payload).subscribe((res: any) => {
+            this.toastr.success(res.message, 'Fresh Cart');
+            this.userService.refreshCartCount();
+            this.adding.set(false);
+            this.done.set(true);
+            setTimeout(() => {
+              this.done.set(false);
+            }, 1000);
+          });
         });
       } else {
         this.toastr.warning('plz login frist!');

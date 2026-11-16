@@ -133,4 +133,8 @@ export class UserService {
   getReviewsForProduct(productId: string): Observable<any> {
     return this.httpClient.get(`${environment.basUrlV1}/products/${productId}/reviews`);
   }
+
+  verifyToken(): Observable<any> {
+    return this.httpClient.get(`${environment.basUrlV1}/auth/verifyToken`);
+  }
 }

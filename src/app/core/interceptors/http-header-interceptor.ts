@@ -9,7 +9,8 @@ export const httpHeaderInterceptor: HttpInterceptorFn = (req, next) => {
     req.url.includes('/reviews') ||
     req.url.includes('orders') ||
     req.url.includes('addresses') ||
-    req.url.includes('users')
+    req.url.includes('users') ||
+    req.url.includes('verifyToken')
   ) {
     const platform_id = inject(PLATFORM_ID);
     if (isPlatformBrowser(platform_id)) {

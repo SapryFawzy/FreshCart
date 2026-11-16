@@ -36,7 +36,7 @@ export class ProductCardComponent implements OnInit {
       let token: string = localStorage.getItem('token')!;
       if (!token) token = sessionStorage.getItem('token')!;
       if (token) {
-        this.userService.loadWishlist();
+        this.userService.verifyToken().subscribe(() => this.userService.loadWishlist());
       }
     }
   }
@@ -46,11 +46,13 @@ export class ProductCardComponent implements OnInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        const exists = this.userService.wishlistIds().has(productId);
-        const action = exists
-          ? this.userService.removefromWithList(productId)
-          : this.userService.addToWithList({ productId });
-        action.subscribe(() => this.userService.setWishlistMembership(productId, !exists));
+        this.userService.verifyToken().subscribe(() => {
+          const exists = this.userService.wishlistIds().has(productId);
+          const action = exists
+            ? this.userService.removefromWithList(productId)
+            : this.userService.addToWithList({ productId });
+          action.subscribe(() => this.userService.setWishlistMembership(productId, !exists));
+        });
       } else {
         this.toster.warning('plz login frist!');
       }
@@ -62,18 +64,20 @@ export class ProductCardComponent implements OnInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.adding.set(true);
-        this.done.set(false);
-        const payload = {
-          productId: id,
-        };
-        this.userService.addToCart(payload).subscribe(() => {
-          this.userService.refreshCartCount();
-          this.adding.set(false);
-          this.done.set(true);
-          setTimeout(() => {
-            this.done.set(false);
-          }, 1000);
+        this.userService.verifyToken().subscribe(() => {
+          this.adding.set(true);
+          this.done.set(false);
+          const payload = {
+            productId: id,
+          };
+          this.userService.addToCart(payload).subscribe(() => {
+            this.userService.refreshCartCount();
+            this.adding.set(false);
+            this.done.set(true);
+            setTimeout(() => {
+              this.done.set(false);
+            }, 1000);
+          });
         });
       } else {
         this.toster.warning('plz login frist!');
