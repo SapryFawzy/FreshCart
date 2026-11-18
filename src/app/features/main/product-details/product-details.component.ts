@@ -22,6 +22,7 @@ import { UserService } from '../../../core/auth/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { jwtDecode } from 'jwt-decode';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -188,26 +189,28 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     if (!isPlatformBrowser(this.platformId)) return;
     const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
     if (token) {
-      this.userService.verifyToken().subscribe(() => {
-        this.isLoggedIn.set(!!token);
-        let tokenUserId: string | undefined;
-        if (token) {
+      if (this.userService.isValidUser()) {
+        {
+          this.isLoggedIn.set(!!token);
+          let tokenUserId: string | undefined;
+          if (token) {
+            try {
+              tokenUserId =
+                jwtDecode<{ id?: string; _id?: string }>(token).id ??
+                jwtDecode<{ _id?: string }>(token)._id;
+            } catch {
+              tokenUserId = undefined;
+            }
+          }
           try {
-            tokenUserId =
-              jwtDecode<{ id?: string; _id?: string }>(token).id ??
-              jwtDecode<{ _id?: string }>(token)._id;
+            const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
+            const user = rawUser ? (JSON.parse(rawUser) as { id?: string; _id?: string }) : {};
+            this.currentUserId.set(user.id ?? user._id ?? tokenUserId ?? null);
           } catch {
-            tokenUserId = undefined;
+            this.currentUserId.set(tokenUserId ?? null);
           }
         }
-        try {
-          const rawUser = localStorage.getItem('user') ?? sessionStorage.getItem('user');
-          const user = rawUser ? (JSON.parse(rawUser) as { id?: string; _id?: string }) : {};
-          this.currentUserId.set(user.id ?? user._id ?? tokenUserId ?? null);
-        } catch {
-          this.currentUserId.set(tokenUserId ?? null);
-        }
-      });
+      }
     }
   }
 
@@ -425,16 +428,22 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.userService.verifyToken().subscribe(()=>{
+        if (this.userService.isValidUser()) {
           const exists = this.userService.wishlistIds().has(productId);
-        const action = exists
-          ? this.userService.removefromWithList(productId)
-          : this.userService.addToWithList({ productId });
-        action.subscribe((res: any) => {
-          this.userService.setWishlistMembership(productId, !exists);
-          this.toastr.success(res.message, 'Fresh Cart');
-        });
-        })
+          const action = exists
+            ? this.userService.removefromWithList(productId)
+            : this.userService.addToWithList({ productId });
+          action.subscribe({
+            next: (res: any) => {
+              this.userService.refreshWishListCount(res.data.length);
+              this.userService.setWishlistMembership(productId, !exists);
+              this.toastr.success(res.message, 'Fresh Cart');
+            },
+            error: (e: Error) => {
+              this.toastr.error(e.message, 'Fresh Cart');
+            },
+          });
+        }
       } else {
         this.toastr.warning('plz login frist!');
       }
@@ -446,22 +455,33 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.userService.verifyToken().subscribe(() => {
+        if (this.userService.isValidUser()) {
           this.adding.set(true);
           this.done.set(false);
           const payload = {
             productId: id,
           };
-          this.userService.addToCart(payload).subscribe((res: any) => {
-            this.toastr.success(res.message, 'Fresh Cart');
-            this.userService.refreshCartCount();
-            this.adding.set(false);
-            this.done.set(true);
-            setTimeout(() => {
-              this.done.set(false);
-            }, 1000);
-          });
-        });
+          this.userService
+            .addToCart(payload)
+            .pipe(
+              finalize(() => {
+                this.adding.set(false);
+                this.done.set(true);
+                setTimeout(() => {
+                  this.done.set(false);
+                }, 1000);
+              }),
+            )
+            .subscribe({
+              next: (res: any) => {
+                this.userService.refreshCartCount(res.numOfCartItems);
+                this.toastr.success(res.message, 'Fresh Cart');
+              },
+              error: (res: any) => {
+                this.toastr.error(res.message, 'Fresh Cart');
+              },
+            });
+        }
       } else {
         this.toastr.warning('plz login frist!');
       }

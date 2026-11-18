@@ -20,7 +20,7 @@ export class WishlistComponent implements OnInit {
   }
 
   getWishList() {
-    this.userService.getWithList().subscribe((res: any) => {
+    this.userService.getWishList().subscribe((res: any) => {
       this.wishList.set(res.data ?? []);
       setTimeout(() => {
         this.done.set(true);
@@ -31,7 +31,7 @@ export class WishlistComponent implements OnInit {
   removeItem(id: string) {
     this.userService.removefromWithList(id).subscribe((res: any) => {
       this.getWishList();
-      this.userService.refreshWishListCount();
+      this.userService.refreshWishListCount(res.data.length);
     });
   }
 }

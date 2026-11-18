@@ -10,6 +10,7 @@ import { Iorder } from '../../../features/main/orders/model/order/iorder.interfa
 })
 export class UserService {
   private readonly httpClient = inject(HttpClient);
+  isValidUser: WritableSignal<boolean> = signal(false);
   wishListCount: WritableSignal<number> = signal(0);
   cartCount: WritableSignal<number> = signal(0);
   readonly wishlistIds = signal<Set<string>>(new Set());
@@ -17,14 +18,14 @@ export class UserService {
   private wishlistLoading = false;
 
   //wishList Actions
-  getWithList(): Observable<object> {
+  getWishList(): Observable<object> {
     return this.httpClient.get(`${environment.basUrlV1}/wishlist`);
   }
 
   loadWishlist(): void {
     if (this.wishlistLoaded || this.wishlistLoading) return;
     this.wishlistLoading = true;
-    this.getWithList().subscribe({
+    this.getWishList().subscribe({
       next: (res: any) => {
         const ids = new Set<string>((res.data ?? []).map((item: any) => item.id ?? item._id));
         this.wishlistIds.set(ids);
@@ -47,9 +48,8 @@ export class UserService {
     this.wishlistLoaded = true;
   }
 
-  refreshWishListCount(): void {
-    this.loadWishlist();
-    this.wishListCount.set(this.wishlistIds().size);
+  refreshWishListCount(count : number): void {
+    this.wishListCount.set(count);
   }
 
   addToWithList(productId: { productId: string }): Observable<object> {
@@ -60,14 +60,8 @@ export class UserService {
   }
 
   //Cart Actions
-  refreshCartCount(): void {
-    this.getCart().subscribe({
-      next: (res: any) => {
-        const count = res.numOfCartItems ?? res.data.products?.length ?? 0;
-        this.cartCount.set(count);
-      },
-      error: (err) => console.error('Cart error:', err),
-    });
+  refreshCartCount(count : number): void {
+    this.cartCount.set(count);
   }
 
   getCart(): Observable<ICartRes> {

@@ -68,38 +68,45 @@ export class NavbarComponent implements OnInit {
   initWhenLogedIn: WritableSignal<boolean> = signal(true);
 
   ngOnInit(): void {
-    this.initNav();
-    this.translate.onLangChange.subscribe(() => this.initNav());
+    let counter = 0;
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       if (isPlatformBrowser(this.platform_id)) {
         let token = localStorage.getItem('token');
         if (!token) token = sessionStorage.getItem('token');
         if (token) {
-          this.userService.verifyToken().subscribe(() => {
-            if (this.initWhenLogedIn()) {
+          this.userService.verifyToken().subscribe({
+            next: (res) => {
+              this.user.set(res.decoded);
+              this.userService.isValidUser.set(true);
+              if (this.initWhenLogedIn()) {
+                this.initWhenLogedIn.set(false);
+                this.getWishlistAndCartCount();
+                this.initNav();
+              }
+            },
+            error: () => {
               this.initNav();
-              this.initWhenLogedIn.set(false);
-            }
-            this.getWishlistAndCartCount();
+              this.userService.wishListCount.set(0);
+              this.userService.cartCount.set(0);
+            },
           });
         } else {
+          this.initNav();
           this.userService.wishListCount.set(0);
           this.userService.cartCount.set(0);
         }
       }
+      this.translate.onLangChange.subscribe(() => {
+        this.initNav();
+      });
     });
   }
 
   getWishlistAndCartCount() {
-    if (isPlatformBrowser(this.platform_id)) {
-      let user = JSON.parse(localStorage.getItem('user')!);
-      if (!user) user = JSON.parse(sessionStorage.getItem('user')!);
-      if (user) {
-        this.getWishListCount();
-        this.getCartCount();
-        this.user.set(user);
-        this.isLogedInUser.set(true);
-      }
+    if (this.userService.isValidUser()) {
+      this.getWishListCount();
+      this.getCartCount();
+      this.isLogedInUser.set(true);
     }
   }
 
@@ -288,6 +295,9 @@ export class NavbarComponent implements OnInit {
   }
 
   signOut() {
+    this.userService.refreshCartCount(0);
+    this.userService.refreshWishListCount(0);
+    this.userService.isValidUser.set(false);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     sessionStorage.removeItem('token');
@@ -308,11 +318,22 @@ export class NavbarComponent implements OnInit {
   }
 
   getWishListCount(): void {
-    this.userService.refreshWishListCount();
+    this.userService.getWishList().subscribe({
+      next: (res: any) => {
+        const ids = new Set<string>((res.data ?? []).map((item: any) => item.id ?? item._id));
+        this.userService.wishlistIds.set(ids);
+        this.userService.wishListCount.set(res.count ?? ids.size);
+      },
+      error: (err) => {
+        console.error('Wishlist error:', err);
+      },
+    });
   }
 
   getCartCount(): void {
-    this.userService.refreshCartCount();
+    this.userService.getCart().subscribe((res: any) => {
+      this.userService.refreshCartCount(res.numOfCartItems);
+    });
   }
 
   search(): void {

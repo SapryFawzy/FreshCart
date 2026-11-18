@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-card',
@@ -36,7 +37,9 @@ export class ProductCardComponent implements OnInit {
       let token: string = localStorage.getItem('token')!;
       if (!token) token = sessionStorage.getItem('token')!;
       if (token) {
-        this.userService.verifyToken().subscribe(() => this.userService.loadWishlist());
+        if (this.userService.isValidUser()) {
+          this.userService.loadWishlist();
+        }
       }
     }
   }
@@ -46,13 +49,18 @@ export class ProductCardComponent implements OnInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.userService.verifyToken().subscribe(() => {
+        if (this.userService.isValidUser()) {
           const exists = this.userService.wishlistIds().has(productId);
           const action = exists
             ? this.userService.removefromWithList(productId)
             : this.userService.addToWithList({ productId });
-          action.subscribe(() => this.userService.setWishlistMembership(productId, !exists));
-        });
+          action.subscribe((res : any) => {
+            this.userService.refreshWishListCount(res.data.length)
+            this.userService.setWishlistMembership(productId, !exists);
+          });
+        } else {
+          this.toster.warning('plz login frist!');
+        }
       } else {
         this.toster.warning('plz login frist!');
       }
@@ -64,23 +72,37 @@ export class ProductCardComponent implements OnInit {
       let token = localStorage.getItem('token');
       if (!token) token = sessionStorage.getItem('token');
       if (token) {
-        this.userService.verifyToken().subscribe(() => {
+        if (this.userService.isValidUser()) {
           this.adding.set(true);
           this.done.set(false);
           const payload = {
             productId: id,
           };
-          this.userService.addToCart(payload).subscribe(() => {
-            this.userService.refreshCartCount();
-            this.adding.set(false);
-            this.done.set(true);
-            setTimeout(() => {
-              this.done.set(false);
-            }, 1000);
-          });
-        });
+          this.userService
+            .addToCart(payload)
+            .pipe(
+              finalize(() => {
+                this.adding.set(false);
+                this.done.set(true);
+                setTimeout(() => {
+                  this.done.set(false);
+                }, 1000);
+              }),
+            )
+            .subscribe({
+              next: (res: any) => {
+                this.userService.refreshCartCount(res.numOfCartItems);
+                this.toster.success('Product Added To Cart Sucssessfully', 'Fresh Cart');
+              },
+              error: (e: Error) => {
+                this.toster.error(e.message, 'Fresh Cart');
+              },
+            });
+        } else {
+          this.toster.warning('plz login first!');
+        }
       } else {
-        this.toster.warning('plz login frist!');
+        this.toster.warning('plz login first!');
       }
     }
   }

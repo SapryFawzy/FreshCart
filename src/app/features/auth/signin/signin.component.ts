@@ -2,14 +2,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Component, ElementRef, inject, signal, viewChild, WritableSignal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorMsgComponent } from '../../../shared/ui/error-msg/error-msg.component';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../../core/auth/services/user.service';
 
 @Component({
   selector: 'app-signin',
@@ -20,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class SigninComponent {
   private readonly auth = inject(AuthService);
   private readonly toastr = inject(ToastrService);
+  private readonly userService = inject(UserService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   rememberMeInput = viewChild<ElementRef<HTMLInputElement>>('rememberMe');
@@ -33,7 +30,8 @@ export class SigninComponent {
     if (this.signinForm.valid) {
       this.loading.set(true);
       this.auth.signin(this.signinForm.value).subscribe((res: any) => {
-        this.toastr.success(res.message,'Fresh Cart');
+        this.userService.isValidUser.set(true);
+        this.toastr.success(res.message, 'Fresh Cart');
         const rememberMeInput: boolean | undefined = this.rememberMeInput()?.nativeElement.checked;
         if (rememberMeInput) {
           localStorage.setItem('token', res.token);

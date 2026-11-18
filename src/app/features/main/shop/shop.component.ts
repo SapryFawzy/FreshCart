@@ -11,11 +11,11 @@ import { IspecificCatgoryRes } from '../../../core/models/catgoryRes/icatgory-re
 import { tap } from 'rxjs';
 import { IbrandRes } from '../../../core/models/brand-res/ibrand-res.interface';
 import { Ibrand } from '../../../core/models/brand/ibrand.interface';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-shop',
-  imports: [ProductCardComponent, RouterLink, TranslatePipe,NgxPaginationModule],
+  imports: [ProductCardComponent, RouterLink, TranslatePipe, NgxPaginationModule],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
@@ -31,9 +31,9 @@ export class ShopComponent {
   categoryID: WritableSignal<string | null> = signal(null);
   brandID: WritableSignal<string | null> = signal(null);
   subcategoryID: WritableSignal<string | null> = signal(null);
-  currentPage : WritableSignal<number> = signal(1);
-  limitedItem : WritableSignal<number> = signal(0);
-  totaleItems : WritableSignal<number> = signal(0);
+  currentPage: WritableSignal<number> = signal(1);
+  limitedItem: WritableSignal<number> = signal(0);
+  totaleItems: WritableSignal<number> = signal(0);
 
   ngOnInit(): void {
     this.getCategoryId();
@@ -81,22 +81,34 @@ export class ShopComponent {
   }
 
   getAllProducts(page: number = 1): void {
-    let param;
+    let param = '?';
 
     if (this.categoryID()) {
-      param = '?category=' + this.categoryID();
+      if (param.length > 1) {
+        param += '&';
+      }
+      param += 'category=' + this.categoryID();
     }
 
     if (this.brandID()) {
-      param = '?brand=' + this.brandID();
+      if (param.length > 1) {
+        param += '&';
+      }
+      param += 'brand=' + this.brandID();
     }
 
     if (this.subcategoryID()) {
-      param = '?subcategory=' + this.subcategoryID();
+      if (param.length > 1) {
+        param += '&';
+      }
+      param += 'subcategory=' + this.subcategoryID();
     }
 
     if (page) {
-      param = '?page=' + page;
+      if (param.length > 1) {
+        param += '&';
+      }
+      param += 'page=' + page;
     }
 
     this.productsService.getAllProducts(param).subscribe((res: IproductRes) => {
@@ -118,7 +130,7 @@ export class ShopComponent {
     this.getAllProducts();
   }
 
-  pageChanged(event : number) : void {
+  pageChanged(event: number): void {
     this.getAllProducts(event);
   }
 }

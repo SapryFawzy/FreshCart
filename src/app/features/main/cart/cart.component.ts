@@ -24,8 +24,8 @@ export class CartComponent implements OnInit {
     this.userService.getCart().subscribe((res: ICartRes) => {
       this.cartItems.set(res.data.products);
       this.cart.set(res.data);
-      this.userService.refreshCartCount();
-            setTimeout(() => {
+      this.userService.refreshCartCount(res.data.products.length);
+      setTimeout(() => {
         this.done.set(true);
       }, 500);
     });
@@ -39,7 +39,7 @@ export class CartComponent implements OnInit {
     this.userService.updateCartProductQuantity(id, payload).subscribe((res: ICartRes) => {
       this.cartItems.set(res.data.products);
       this.cart.set(res.data);
-      this.userService.refreshCartCount();
+      this.userService.refreshCartCount(res.data.products.length);
     });
   }
 
@@ -47,7 +47,7 @@ export class CartComponent implements OnInit {
     this.userService.removefromCart(id).subscribe((res: ICartRes) => {
       this.cartItems.set(res.data.products);
       this.cart.set(res.data);
-      this.userService.refreshCartCount();
+      this.userService.refreshCartCount(res.data.products.length);
     });
   }
 
@@ -55,7 +55,7 @@ export class CartComponent implements OnInit {
     this.userService.clearCart().subscribe((res: ICartRes) => {
       this.cartItems.set([]);
       this.cart.set(null);
-      this.userService.refreshCartCount();
+      this.userService.refreshCartCount(res.data.products.length);
     });
   }
 }
