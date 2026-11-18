@@ -4,6 +4,7 @@ import { ProductsService } from '../../../core/services/products.service';
 import { Iproduct } from '../../../core/models/product/iproduct.interface';
 import { IproductRes } from '../../../core/models/product-res/iproduct-res.interface';
 import { ProductCardComponent } from './components/product-card/product-card.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -20,11 +21,15 @@ export class ProductComponent implements OnInit {
   }
 
   getAllProducts() {
-    this.productsService.getAllProducts().subscribe((res: IproductRes) => {
-      this.products.set(res.data);
-      setTimeout(() => {
-        this.done.set(true);
-      }, 500);
-    });
+    this.productsService
+      .getAllProducts()
+      .pipe(
+        finalize(() => {
+          this.done.set(true);
+        }),
+      )
+      .subscribe((res: IproductRes) => {
+        this.products.set(res.data);
+      });
   }
 }
