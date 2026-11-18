@@ -42,8 +42,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
-  categriesItems: MenuItem[] = [];
-  profileItems: MenuItem[] = [];
+  categriesItems: WritableSignal<MenuItem[]> = signal([]);
+  profileItems: WritableSignal<MenuItem[]> = signal([]);
   showCategoriesMenu: WritableSignal<boolean> = signal(false);
   isLogedInUser: WritableSignal<boolean> = signal(false);
   isMenuOpen: WritableSignal<boolean> = signal(false);
@@ -114,7 +114,7 @@ export class NavbarComponent implements OnInit {
     this.getWishlistAndCartCount();
     this.categorsService.getAllCatgories().subscribe((res: IcatgoryRes) => {
       this.categories.set(res.data ?? []);
-      this.categriesItems = [
+      this.categriesItems.set([
         {
           items: [
             {
@@ -180,7 +180,7 @@ export class NavbarComponent implements OnInit {
             },
           ],
         },
-      ];
+      ]);
     });
     let profileItems;
     let profileOptionsIfLogedIn: MenuItem[] = [];
@@ -269,13 +269,13 @@ export class NavbarComponent implements OnInit {
         },
       ];
     }
-    this.profileItems = [
+    this.profileItems.set([
       {
         label: labelIfLogedIn,
         items: [...profileItems],
       },
       ...profileOptionsIfLogedIn,
-    ];
+    ]);
   }
 
   toggleLanguage(): void {

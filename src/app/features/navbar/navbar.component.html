@@ -232,7 +232,7 @@
             <div class="flex justify-center grow">
               <p-menu
                 #menu
-                [model]="categriesItems"
+                [model]="categriesItems()"
                 [popup]="true"
                 appendTo="body"
                 styleClass="categories-menu"
@@ -341,7 +341,7 @@
             <div class="relative flex justify-center">
               <p-menu
                 #profileMenu
-                [model]="profileItems"
+                [model]="profileItems()"
                 [popup]="true"
                 appendTo="body"
                 styleClass="w-40"
